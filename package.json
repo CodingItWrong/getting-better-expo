@@ -20,8 +20,19 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
+    "@testing-library/jest-native": "^4.0.5",
+    "@testing-library/react-native": "^11.0.0",
     "jest": "^26",
     "jest-expo": "^45.0.1"
   },
-  "private": true
+  "private": true,
+  "jest": {
+    "preset": "jest-expo",
+    "modulePathIgnorePatterns": [
+      "cypress"
+    ],
+    "setupFilesAfterEnv": [
+      "./jest-setup-after-env.js"
+    ]
+  }
 }
