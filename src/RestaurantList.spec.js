@@ -6,7 +6,16 @@ describe('RestaurantList', () => {
     {id: 1, name: 'Pizza Place'},
     {id: 2, name: 'Salad Place'},
   ];
+  const loadingMessage = 'Loading…';
   const errorMessage = 'An error occurred loading restaurants';
+
+  describe('while loading', () => {
+    it('shows a loading indicator', () => {
+      render(<RestaurantList loading />);
+
+      expect(screen.queryByText(loadingMessage)).toBeTruthy();
+    });
+  });
 
   describe('when loading succeeds', () => {
     it('renders restaurants from the server', () => {
@@ -15,6 +24,7 @@ describe('RestaurantList', () => {
       expect(screen.queryByText(restaurants[0].name)).toBeTruthy();
       expect(screen.queryByText(restaurants[1].name)).toBeTruthy();
 
+      expect(screen.queryByText(loadingMessage)).toBeNull();
       expect(screen.queryByText(errorMessage)).toBeNull();
     });
   });
@@ -24,6 +34,8 @@ describe('RestaurantList', () => {
       render(<RestaurantList loadError />);
 
       expect(screen.queryByText(errorMessage)).toBeTruthy();
+
+      expect(screen.queryByText(loadingMessage)).toBeNull();
     });
   });
 });
