@@ -5,6 +5,9 @@ import {
   waitFor,
 } from '@testing-library/react-native';
 import RestaurantList from './RestaurantList';
+import api from './api';
+
+jest.mock('./api');
 
 describe('RestaurantList', () => {
   const restaurants = [
@@ -48,6 +51,8 @@ describe('RestaurantList', () => {
     const name = 'Burger Place';
 
     it('clears the new restaurant name field', async () => {
+      api.post.mockResolvedValue();
+
       render(<RestaurantList restaurants={[]} />);
 
       fireEvent.changeText(
@@ -55,6 +60,8 @@ describe('RestaurantList', () => {
         name,
       );
       fireEvent.press(screen.getByText('Add'));
+
+      expect(api.post).toHaveBeenCalledWith('/restaurants', {name});
 
       await waitFor(() =>
         expect(screen.getByPlaceholderText('New restaurant name')).toHaveProp(
