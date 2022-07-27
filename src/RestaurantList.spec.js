@@ -136,4 +136,16 @@ describe('RestaurantList', () => {
       await waitFor(() => expect(reloadRestaurants).toHaveBeenCalledWith());
     });
   });
+
+  describe('when deleting a restaurant fails', () => {
+    it('shows an error message', async () => {
+      api.delete.mockRejectedValue();
+
+      render(<RestaurantList restaurants={restaurants} />);
+
+      fireEvent.press(screen.getAllByText('Delete')[0]);
+
+      await screen.findByText('An error occurred deleting the restaurant');
+    });
+  });
 });
