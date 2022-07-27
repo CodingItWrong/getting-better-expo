@@ -1,7 +1,8 @@
 import {
+  fireEvent,
   render,
   screen,
-  waitForElementToBeRemoved,
+  waitFor,
 } from '@testing-library/react-native';
 import RestaurantList from './RestaurantList';
 import api from './api';
@@ -47,6 +48,31 @@ describe('RestaurantList', () => {
       await screen.findByText('An error occurred loading restaurants');
 
       expect(screen.queryByText('Loading…')).toBeNull();
+    });
+  });
+
+  describe('when adding a restaurant succeeds', () => {
+    const name = 'Burger Place';
+
+    it('clears the new restaurant name field', async () => {
+      api.get.mockResolvedValue({data: restaurants});
+
+      render(<RestaurantList />);
+
+      await screen.findByText(restaurants[0].name);
+
+      fireEvent.changeText(
+        screen.getByPlaceholderText('New restaurant name'),
+        name,
+      );
+      fireEvent.press(screen.getByText('Add'));
+
+      await waitFor(() =>
+        expect(screen.getByPlaceholderText('New restaurant name')).toHaveProp(
+          'value',
+          '',
+        ),
+      );
     });
   });
 });
