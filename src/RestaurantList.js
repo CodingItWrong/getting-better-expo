@@ -16,39 +16,40 @@ export default function RestaurantList() {
   const [name, setName] = useState('');
   const [updateErrorMessage, setUpdateErrorMessage] = useState(null);
 
-  function loadRestaurants() {
-    return api.get('/restaurants').then(response => setData(response.data));
+  async function loadRestaurants() {
+    const response = await api.get('/restaurants');
+    setData(response.data);
   }
 
   useEffect(() => {
-    loadRestaurants()
-      .catch(() => {
+    (async () => {
+      try {
+        await loadRestaurants();
+      } catch {
         setError(true);
-      })
-      .finally(() => {
+      } finally {
         setLoading(false);
-      });
+      }
+    })();
   }, []);
 
-  function handleAdd() {
-    api
-      .post('/restaurants', {name})
-      .then(loadRestaurants)
-      .then(response => {
-        setName('');
-      })
-      .catch(() =>
-        setUpdateErrorMessage('An error occurred adding the restaurant'),
-      );
+  async function handleAdd() {
+    try {
+      await api.post('/restaurants', {name});
+      await loadRestaurants();
+      setName('');
+    } catch {
+      setUpdateErrorMessage('An error occurred adding the restaurant');
+    }
   }
 
-  function handleDelete(item) {
-    api
-      .delete(`/restaurants/${item.id}`)
-      .then(loadRestaurants)
-      .catch(() =>
-        setUpdateErrorMessage('An error occurred deleting the restaurant'),
-      );
+  async function handleDelete(item) {
+    try {
+      await api.delete(`/restaurants/${item.id}`);
+      await loadRestaurants();
+    } catch {
+      setUpdateErrorMessage('An error occurred deleting the restaurant');
+    }
   }
 
   if (loading) {
