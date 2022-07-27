@@ -172,4 +172,27 @@ describe('RestaurantList', () => {
       expect(screen.queryByText(restaurants[0].name)).toBeNull();
     });
   });
+
+  describe('when deleting a restaurant fails', () => {
+    async function deleteRestaurant() {
+      api.get.mockResolvedValue({data: restaurants});
+      api.delete.mockRejectedValue();
+
+      render(<RestaurantList />);
+
+      await screen.findByText(restaurants[0].name);
+
+      fireEvent.press(screen.getAllByText('Delete')[0]);
+    }
+
+    it('shows an error message', async () => {
+      await deleteRestaurant();
+
+      await act(flushPromises);
+
+      expect(
+        screen.queryByText('An error occurred deleting the restaurant'),
+      ).not.toBeNull();
+    });
+  });
 });

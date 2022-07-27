@@ -69,6 +69,11 @@ export default function RestaurantList() {
                   .delete(`/restaurants/${item.id}`)
                   .then(() => api.get('/restaurants'))
                   .then(response => setData(response.data))
+                  .catch(() =>
+                    setUpdateErrorMessage(
+                      'An error occurred deleting the restaurant',
+                    ),
+                  )
               }
             >
               <Text>Delete</Text>
