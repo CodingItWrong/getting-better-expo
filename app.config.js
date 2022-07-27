@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 export default {
   name: 'getting-better-expo',
   slug: 'getting-better-expo',
@@ -25,5 +27,8 @@ export default {
   },
   web: {
     favicon: './assets/favicon.png',
+  },
+  extra: {
+    apiKey: process.env.API_KEY,
   },
 };
