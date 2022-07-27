@@ -61,10 +61,22 @@ describe('RestaurantList', () => {
   describe('when adding a restaurant succeeds', () => {
     const name = 'Burger Place';
 
+    let reloadRestaurants;
+
     async function addRestaurant() {
       api.post.mockResolvedValue();
 
-      render(<RestaurantList restaurants={[]} />);
+      reloadRestaurants = jest
+        .fn()
+        .mockName('reloadRestaurants')
+        .mockResolvedValue();
+
+      render(
+        <RestaurantList
+          restaurants={[]}
+          reloadRestaurants={reloadRestaurants}
+        />,
+      );
 
       fireEvent.changeText(
         screen.getByPlaceholderText('New restaurant name'),
@@ -88,6 +100,12 @@ describe('RestaurantList', () => {
       await addRestaurant();
 
       expect(api.post).toHaveBeenCalledWith('/restaurants', {name});
+    });
+
+    it('re-requests the data from the server', async () => {
+      await addRestaurant();
+
+      expect(reloadRestaurants).toHaveBeenCalledWith();
     });
   });
 });
