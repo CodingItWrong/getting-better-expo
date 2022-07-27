@@ -1,8 +1,11 @@
 import {
+  act,
+  fireEvent,
   render,
   screen,
   waitForElementToBeRemoved,
 } from '@testing-library/react-native';
+import flushPromises from 'flush-promises';
 import React from 'react';
 import RestaurantList from './RestaurantList';
 import api from './api';
@@ -65,6 +68,35 @@ describe('RestaurantList', () => {
       renderRestaurants();
 
       await waitForElementToBeRemoved(() => screen.getByText('Loading…'));
+    });
+  });
+
+  describe('when adding a restaurant succeeds', () => {
+    const name = 'Burger Place';
+
+    async function addRestaurant() {
+      api.get.mockResolvedValue({data: restaurants});
+
+      render(<RestaurantList />);
+
+      await screen.findByText(restaurants[0].name);
+
+      fireEvent.changeText(
+        screen.getByPlaceholderText('New restaurant name'),
+        name,
+      );
+      fireEvent.press(screen.getByText('Add'));
+
+      await act(flushPromises);
+    }
+
+    it('clears the new restaurant name field', async () => {
+      await addRestaurant();
+
+      expect(screen.getByPlaceholderText('New restaurant name')).toHaveProp(
+        'value',
+        '',
+      );
     });
   });
 });

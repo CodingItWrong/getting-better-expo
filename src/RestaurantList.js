@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, Text} from 'react-native';
+import {FlatList, Pressable, Text, TextInput} from 'react-native';
 import api from './api';
 
 export default function RestaurantList() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [name, setName] = useState('');
 
   useEffect(() => {
     api
@@ -29,10 +30,20 @@ export default function RestaurantList() {
   }
 
   return (
-    <FlatList
-      data={data}
-      keyExtractor={item => item.id}
-      renderItem={({item}) => <Text>{item.name}</Text>}
-    />
+    <>
+      <TextInput
+        placeholder="New restaurant name"
+        value={name}
+        onChangeText={setName}
+      />
+      <Pressable onPress={() => setName('')}>
+        <Text>Add</Text>
+      </Pressable>
+      <FlatList
+        data={data}
+        keyExtractor={item => item.id}
+        renderItem={({item}) => <Text>{item.name}</Text>}
+      />
+    </>
   );
 }
