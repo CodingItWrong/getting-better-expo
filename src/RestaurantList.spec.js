@@ -52,7 +52,17 @@ describe('RestaurantList', () => {
     it('clears the new restaurant name field', async () => {
       api.post.mockResolvedValue();
 
-      render(<RestaurantList restaurants={[]} />);
+      const reloadRestaurants = jest
+        .fn()
+        .mockName('reloadRestaurants')
+        .mockResolvedValue();
+
+      render(
+        <RestaurantList
+          restaurants={[]}
+          reloadRestaurants={reloadRestaurants}
+        />,
+      );
 
       fireEvent.changeText(
         screen.getByPlaceholderText('New restaurant name'),
@@ -68,6 +78,8 @@ describe('RestaurantList', () => {
           '',
         ),
       );
+
+      expect(reloadRestaurants).toHaveBeenCalledWith();
     });
   });
 });
