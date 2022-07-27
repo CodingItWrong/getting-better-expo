@@ -129,4 +129,19 @@ describe('RestaurantList', () => {
       );
     });
   });
+
+  describe('when deleting a restaurant fails', () => {
+    it('shows an error message', async () => {
+      api.get.mockResolvedValue({data: restaurants});
+      api.delete.mockRejectedValue();
+
+      render(<RestaurantList />);
+
+      await screen.findByText(restaurants[0].name);
+
+      fireEvent.press(screen.getAllByText('Delete')[0]);
+
+      await screen.findByText('An error occurred deleting the restaurant');
+    });
+  });
 });
