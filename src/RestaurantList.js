@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import {FlatList, Pressable, Text, TextInput} from 'react-native';
+import api from './api';
 
 export default function RestaurantList({restaurants, loading, loadError}) {
   const [name, setName] = useState('');
@@ -19,7 +20,9 @@ export default function RestaurantList({restaurants, loading, loadError}) {
         value={name}
         onChangeText={setName}
       />
-      <Pressable onPress={() => setName('')}>
+      <Pressable
+        onPress={() => api.post('/restaurants', {name}).then(() => setName(''))}
+      >
         <Text>Add</Text>
       </Pressable>
       <FlatList
