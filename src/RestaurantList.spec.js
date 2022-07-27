@@ -1,4 +1,5 @@
-import {render, screen} from '@testing-library/react-native';
+import {act, fireEvent, render, screen} from '@testing-library/react-native';
+import flushPromises from 'flush-promises';
 import RestaurantList from './RestaurantList';
 
 describe('RestaurantList', () => {
@@ -51,6 +52,31 @@ describe('RestaurantList', () => {
       renderRestaurants();
 
       expect(screen.queryByText('Loading…')).toBeNull();
+    });
+  });
+
+  describe('when adding a restaurant succeeds', () => {
+    const name = 'Burger Place';
+
+    async function addRestaurant() {
+      render(<RestaurantList restaurants={[]} />);
+
+      fireEvent.changeText(
+        screen.getByPlaceholderText('New restaurant name'),
+        name,
+      );
+      fireEvent.press(screen.getByText('Add'));
+
+      await act(flushPromises);
+    }
+
+    it('clears the new restaurant name field', async () => {
+      await addRestaurant();
+
+      expect(screen.getByPlaceholderText('New restaurant name')).toHaveProp(
+        'value',
+        '',
+      );
     });
   });
 });
