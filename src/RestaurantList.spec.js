@@ -1,4 +1,9 @@
-import {render, screen} from '@testing-library/react-native';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react-native';
 import RestaurantList from './RestaurantList';
 
 describe('RestaurantList', () => {
@@ -35,6 +40,27 @@ describe('RestaurantList', () => {
       ).not.toBeNull();
 
       expect(screen.queryByText('Loading…')).toBeNull();
+    });
+  });
+
+  describe('when adding a restaurant succeeds', () => {
+    const name = 'Burger Place';
+
+    it('clears the new restaurant name field', async () => {
+      render(<RestaurantList restaurants={[]} />);
+
+      fireEvent.changeText(
+        screen.getByPlaceholderText('New restaurant name'),
+        name,
+      );
+      fireEvent.press(screen.getByText('Add'));
+
+      await waitFor(() =>
+        expect(screen.getByPlaceholderText('New restaurant name')).toHaveProp(
+          'value',
+          '',
+        ),
+      );
     });
   });
 });
