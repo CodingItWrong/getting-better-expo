@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {FlatList, Pressable, Text, TextInput} from 'react-native';
+import {FlatList, Pressable, Text, TextInput, View} from 'react-native';
 import api from './api';
 
 export default function RestaurantList() {
@@ -57,7 +57,21 @@ export default function RestaurantList() {
       <FlatList
         data={data}
         keyExtractor={item => item.id}
-        renderItem={({item}) => <Text>{item.name}</Text>}
+        renderItem={({item}) => (
+          <View>
+            <Text>{item.name}</Text>
+            <Pressable
+              onPress={() =>
+                api
+                  .delete(`/restaurants/${item.id}`)
+                  .then(() => api.get('/restaurants'))
+                  .then(response => setData(response.data))
+              }
+            >
+              <Text>Delete</Text>
+            </Pressable>
+          </View>
+        )}
       />
     </>
   );
