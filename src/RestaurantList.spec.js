@@ -108,4 +108,28 @@ describe('RestaurantList', () => {
       expect(reloadRestaurants).toHaveBeenCalledWith();
     });
   });
+
+  describe('when adding a restaurant fails', () => {
+    async function addRestaurant() {
+      api.post.mockRejectedValue();
+
+      render(<RestaurantList restaurants={[]} />);
+
+      fireEvent.changeText(
+        screen.getByPlaceholderText('New restaurant name'),
+        'Burger Place',
+      );
+      fireEvent.press(screen.getByText('Add'));
+
+      await act(flushPromises);
+    }
+
+    it('shows an error message', async () => {
+      await addRestaurant();
+
+      expect(
+        screen.queryByText('An error occurred adding the restaurant'),
+      ).not.toBeNull();
+    });
+  });
 });
