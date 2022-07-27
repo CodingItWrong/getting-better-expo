@@ -36,7 +36,9 @@ export default function RestaurantList() {
         value={name}
         onChangeText={setName}
       />
-      <Pressable onPress={() => setName('')}>
+      <Pressable
+        onPress={() => api.post('/restaurants', {name}).then(() => setName(''))}
+      >
         <Text>Add</Text>
       </Pressable>
       <FlatList

@@ -76,6 +76,7 @@ describe('RestaurantList', () => {
 
     async function addRestaurant() {
       api.get.mockResolvedValue({data: restaurants});
+      api.post.mockResolvedValue();
 
       render(<RestaurantList />);
 
@@ -97,6 +98,12 @@ describe('RestaurantList', () => {
         'value',
         '',
       );
+    });
+
+    it('makes the right request to the server', async () => {
+      await addRestaurant();
+
+      expect(api.post).toHaveBeenCalledWith('/restaurants', {name});
     });
   });
 });
