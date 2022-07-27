@@ -1,6 +1,9 @@
-import {FlatList, Text} from 'react-native';
+import {useState} from 'react';
+import {FlatList, Pressable, Text, TextInput} from 'react-native';
 
 export default function RestaurantList({restaurants, loading, loadError}) {
+  const [name, setName] = useState('');
+
   if (loading) {
     return <Text>Loading…</Text>;
   }
@@ -10,10 +13,20 @@ export default function RestaurantList({restaurants, loading, loadError}) {
   }
 
   return (
-    <FlatList
-      data={restaurants}
-      keyExtractor={item => item.id}
-      renderItem={({item}) => <Text>{item.name}</Text>}
-    />
+    <>
+      <TextInput
+        placeholder="New restaurant name"
+        value={name}
+        onChangeText={setName}
+      />
+      <Pressable onPress={() => setName('')}>
+        <Text>Add</Text>
+      </Pressable>
+      <FlatList
+        data={restaurants}
+        keyExtractor={item => item.id}
+        renderItem={({item}) => <Text>{item.name}</Text>}
+      />
+    </>
   );
 }
