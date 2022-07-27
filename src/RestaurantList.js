@@ -7,6 +7,7 @@ export default function RestaurantList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [name, setName] = useState('');
+  const [updateErrorMessage, setUpdateErrorMessage] = useState(null);
 
   useEffect(() => {
     api
@@ -48,10 +49,14 @@ export default function RestaurantList() {
               setData(response.data);
               setName('');
             })
+            .catch(() =>
+              setUpdateErrorMessage('An error occurred adding the restaurant'),
+            )
         }
       >
         <Text>Add</Text>
       </Pressable>
+      {updateErrorMessage && <Text>{updateErrorMessage}</Text>}
       <FlatList
         data={data}
         keyExtractor={item => item.id}
