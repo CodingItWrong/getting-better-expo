@@ -1,6 +1,9 @@
 import {act, fireEvent, render, screen} from '@testing-library/react-native';
 import flushPromises from 'flush-promises';
 import RestaurantList from './RestaurantList';
+import api from './api';
+
+jest.mock('./api');
 
 describe('RestaurantList', () => {
   const restaurants = [
@@ -59,6 +62,8 @@ describe('RestaurantList', () => {
     const name = 'Burger Place';
 
     async function addRestaurant() {
+      api.post.mockResolvedValue();
+
       render(<RestaurantList restaurants={[]} />);
 
       fireEvent.changeText(
@@ -77,6 +82,12 @@ describe('RestaurantList', () => {
         'value',
         '',
       );
+    });
+
+    it('makes the right request to the server', async () => {
+      await addRestaurant();
+
+      expect(api.post).toHaveBeenCalledWith('/restaurants', {name});
     });
   });
 });
