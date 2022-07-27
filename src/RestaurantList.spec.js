@@ -142,4 +142,34 @@ describe('RestaurantList', () => {
       ).not.toBeNull();
     });
   });
+
+  describe('when deleting a restaurant succeeds', () => {
+    async function deleteRestaurant() {
+      api.get
+        .mockResolvedValueOnce({data: restaurants})
+        .mockResolvedValue({data: restaurants.filter(r => r.id !== 1)});
+      api.delete.mockResolvedValue();
+
+      render(<RestaurantList />);
+
+      await screen.findByText(restaurants[0].name);
+
+      fireEvent.press(screen.getAllByText('Delete')[0]);
+
+      await act(flushPromises);
+    }
+
+    it('sends the right data to the server', async () => {
+      await deleteRestaurant();
+      expect(api.delete).toHaveBeenCalledWith(
+        `/restaurants/${restaurants[0].id}`,
+      );
+    });
+
+    it('re-requests the data from the server', async () => {
+      await deleteRestaurant();
+
+      expect(screen.queryByText(restaurants[0].name)).toBeNull();
+    });
+  });
 });
