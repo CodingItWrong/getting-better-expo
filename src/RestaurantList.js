@@ -16,25 +16,25 @@ export default function RestaurantList() {
   const [name, setName] = useState('');
   const [updateErrorMessage, setUpdateErrorMessage] = useState(null);
 
+  function loadRestaurants() {
+    return api.get('/restaurants').then(response => setData(response.data));
+  }
+
   useEffect(() => {
-    api
-      .get('/restaurants')
-      .then(response => {
-        setData(response.data);
-        setLoading(false);
-      })
+    loadRestaurants()
       .catch(() => {
-        setLoading(false);
         setError(true);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
   function handleAdd() {
     api
       .post('/restaurants', {name})
-      .then(() => api.get('/restaurants'))
+      .then(loadRestaurants)
       .then(response => {
-        setData(response.data);
         setName('');
       })
       .catch(() =>
@@ -45,8 +45,7 @@ export default function RestaurantList() {
   function handleDelete(item) {
     api
       .delete(`/restaurants/${item.id}`)
-      .then(() => api.get('/restaurants'))
-      .then(response => setData(response.data))
+      .then(loadRestaurants)
       .catch(() =>
         setUpdateErrorMessage('An error occurred deleting the restaurant'),
       );
