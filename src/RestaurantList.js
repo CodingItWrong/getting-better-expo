@@ -29,6 +29,29 @@ export default function RestaurantList() {
       });
   }, []);
 
+  function handleAdd() {
+    api
+      .post('/restaurants', {name})
+      .then(() => api.get('/restaurants'))
+      .then(response => {
+        setData(response.data);
+        setName('');
+      })
+      .catch(() =>
+        setUpdateErrorMessage('An error occurred adding the restaurant'),
+      );
+  }
+
+  function handleDelete(item) {
+    api
+      .delete(`/restaurants/${item.id}`)
+      .then(() => api.get('/restaurants'))
+      .then(response => setData(response.data))
+      .catch(() =>
+        setUpdateErrorMessage('An error occurred deleting the restaurant'),
+      );
+  }
+
   if (loading) {
     return <Text style={styles.message}>Loading…</Text>;
   }
@@ -52,20 +75,7 @@ export default function RestaurantList() {
         />
         <Pressable
           style={[styles.button, styles.addButton]}
-          onPress={() =>
-            api
-              .post('/restaurants', {name})
-              .then(() => api.get('/restaurants'))
-              .then(response => {
-                setData(response.data);
-                setName('');
-              })
-              .catch(() =>
-                setUpdateErrorMessage(
-                  'An error occurred adding the restaurant',
-                ),
-              )
-          }
+          onPress={handleAdd}
         >
           <Text>Add</Text>
         </Pressable>
@@ -79,20 +89,7 @@ export default function RestaurantList() {
         renderItem={({item}) => (
           <View style={styles.restaurantRow}>
             <Text style={styles.restaurantName}>{item.name}</Text>
-            <Pressable
-              style={styles.button}
-              onPress={() =>
-                api
-                  .delete(`/restaurants/${item.id}`)
-                  .then(() => api.get('/restaurants'))
-                  .then(response => setData(response.data))
-                  .catch(() =>
-                    setUpdateErrorMessage(
-                      'An error occurred deleting the restaurant',
-                    ),
-                  )
-              }
-            >
+            <Pressable style={styles.button} onPress={() => handleDelete(item)}>
               <Text>Delete</Text>
             </Pressable>
           </View>
