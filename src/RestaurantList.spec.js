@@ -132,4 +132,41 @@ describe('RestaurantList', () => {
       ).not.toBeNull();
     });
   });
+
+  describe('when deleting a restaurant succeeds', () => {
+    let reloadRestaurants;
+
+    async function deleteRestaurant() {
+      api.delete.mockResolvedValue();
+
+      reloadRestaurants = jest
+        .fn()
+        .mockName('reloadRestaurants')
+        .mockResolvedValue();
+
+      render(
+        <RestaurantList
+          restaurants={restaurants}
+          reloadRestaurants={reloadRestaurants}
+        />,
+      );
+
+      fireEvent.press(screen.getAllByText('Delete')[0]);
+
+      await act(flushPromises);
+    }
+
+    it('sends the right data to the server', async () => {
+      await deleteRestaurant();
+      expect(api.delete).toHaveBeenCalledWith(
+        `/restaurants/${restaurants[0].id}`,
+      );
+    });
+
+    it('re-requests the data from the server', async () => {
+      await deleteRestaurant();
+
+      expect(reloadRestaurants).toHaveBeenCalledWith();
+    });
+  });
 });
