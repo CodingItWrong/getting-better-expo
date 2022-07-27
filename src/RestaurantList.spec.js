@@ -7,6 +7,7 @@ import {
 } from '@testing-library/react-native';
 import flushPromises from 'flush-promises';
 import React from 'react';
+import {Provider as PaperProvider} from 'react-native-paper';
 import RestaurantList from './RestaurantList';
 import api from './api';
 
@@ -18,12 +19,16 @@ describe('RestaurantList', () => {
     {id: 2, name: 'Salad Place'},
   ];
 
+  function providers(children) {
+    return <PaperProvider>{children}</PaperProvider>;
+  }
+
   describe('while loading', () => {
     it('shows a loading indicator', async () => {
       const neverSettles = new Promise(() => {});
       api.get.mockReturnValue(neverSettles);
 
-      render(<RestaurantList />);
+      render(providers(<RestaurantList />));
 
       expect(screen.queryByText('Loading…')).not.toBeNull();
     });
@@ -33,7 +38,7 @@ describe('RestaurantList', () => {
     async function renderRestaurants() {
       api.get.mockResolvedValue({data: restaurants});
 
-      render(<RestaurantList />);
+      render(providers(<RestaurantList />));
 
       await act(flushPromises);
     }
@@ -55,7 +60,7 @@ describe('RestaurantList', () => {
     async function renderRestaurants() {
       api.get.mockRejectedValue();
 
-      render(<RestaurantList />);
+      render(providers(<RestaurantList />));
     }
 
     it('renders an error message', async () => {
@@ -81,7 +86,7 @@ describe('RestaurantList', () => {
         .mockResolvedValue({data: [...restaurants, newRestaurant]});
       api.post.mockResolvedValue();
 
-      render(<RestaurantList />);
+      render(providers(<RestaurantList />));
 
       await screen.findByText(restaurants[0].name);
 
@@ -121,7 +126,7 @@ describe('RestaurantList', () => {
       api.get.mockResolvedValue({data: restaurants});
       api.post.mockRejectedValue();
 
-      render(<RestaurantList />);
+      render(providers(<RestaurantList />));
 
       await screen.findByText(restaurants[0].name);
 
@@ -150,7 +155,7 @@ describe('RestaurantList', () => {
         .mockResolvedValue({data: restaurants.filter(r => r.id !== 1)});
       api.delete.mockResolvedValue();
 
-      render(<RestaurantList />);
+      render(providers(<RestaurantList />));
 
       await screen.findByText(restaurants[0].name);
 
@@ -178,7 +183,7 @@ describe('RestaurantList', () => {
       api.get.mockResolvedValue({data: restaurants});
       api.delete.mockRejectedValue();
 
-      render(<RestaurantList />);
+      render(providers(<RestaurantList />));
 
       await screen.findByText(restaurants[0].name);
 
