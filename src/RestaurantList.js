@@ -1,43 +1,30 @@
-import React, {useEffect, useState} from 'react';
+import {useQuery, useQueryClient} from '@tanstack/react-query';
+import React, {useState} from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 import {Button, List, Text, TextInput} from 'react-native-paper';
 import api from './api';
 
-function useRestaurants() {
-  const [restaurants, setRestaurants] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  async function loadRestaurants() {
-    const response = await api.get('/restaurants');
-    setRestaurants(response.data);
-  }
-
-  useEffect(() => {
-    loadRestaurants()
-      .then(response => {
-        setLoading(false);
-      })
-      .then(response => {
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-        setError(true);
-      });
-  }, []);
-
-  return {restaurants, loading, error, loadRestaurants};
-}
+const RESTAURANTS_QUERY = 'RESTAURANTS_QUERY';
 
 export default function RestaurantList() {
-  const {restaurants, loading, error, loadRestaurants} = useRestaurants();
+  const queryClient = useQueryClient();
+  const restaurantsResult = useQuery([RESTAURANTS_QUERY], () =>
+    api.get('/restaurants').then(response => response.data),
+  );
+  const loading = restaurantsResult.isLoading;
+  const error = restaurantsResult.isError;
+  const restaurants = restaurantsResult.data ?? [];
+
   const [updateErrorMessage, setUpdateErrorMessage] = useState(null);
+
+  function handleAdd() {
+    queryClient.invalidateQueries(RESTAURANTS_QUERY);
+  }
 
   async function handleDelete(restaurant) {
     try {
       await api.delete(`/restaurants/${restaurant.id}`);
-      await loadRestaurants();
+      queryClient.invalidateQueries(RESTAURANTS_QUERY);
     } catch {
       setUpdateErrorMessage('An error occurred deleting the restaurant');
     }
@@ -53,7 +40,7 @@ export default function RestaurantList() {
 
   return (
     <View style={styles.container}>
-      <NewRestaurantForm onAdd={loadRestaurants} />
+      <NewRestaurantForm onAdd={handleAdd} />
       {updateErrorMessage && <Text>{updateErrorMessage}</Text>}
       <FlatList
         data={restaurants}

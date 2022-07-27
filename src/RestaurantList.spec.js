@@ -1,3 +1,4 @@
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {
   act,
   fireEvent,
@@ -20,7 +21,27 @@ describe('RestaurantList', () => {
   ];
 
   function providers(children) {
-    return <PaperProvider>{children}</PaperProvider>;
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+          cacheTime: Infinity,
+        },
+      },
+      logger: {
+        log: () => {},
+        warn: () => {},
+        error: () => {},
+      },
+    });
+
+    return (
+      <PaperProvider>
+        <QueryClientProvider client={queryClient}>
+          {children}
+        </QueryClientProvider>
+      </PaperProvider>
+    );
   }
 
   describe('while loading', () => {
@@ -35,22 +56,13 @@ describe('RestaurantList', () => {
   });
 
   describe('when loading succeeds', () => {
-    async function renderRestaurants() {
+    it('renders restaurants from the server', async () => {
       api.get.mockResolvedValue({data: restaurants});
 
       render(providers(<RestaurantList />));
 
-      await act(flushPromises);
-    }
-
-    it('renders restaurants from the server', async () => {
-      await renderRestaurants();
-      expect(screen.queryByText(restaurants[0].name)).not.toBeNull();
+      await screen.findByText(restaurants[0].name);
       expect(screen.queryByText(restaurants[1].name)).not.toBeNull();
-    });
-
-    it('hides the loading indicator', async () => {
-      await renderRestaurants();
 
       expect(screen.queryByText('Loading…')).toBeNull();
     });
@@ -80,7 +92,7 @@ describe('RestaurantList', () => {
     const name = 'Burger Place';
     const newRestaurant = {id: 3, name};
 
-    async function addRestaurant() {
+    it('displays the new restaurant reloaded from the server', async () => {
       api.get
         .mockResolvedValueOnce({data: restaurants})
         .mockResolvedValue({data: [...restaurants, newRestaurant]});
@@ -96,28 +108,14 @@ describe('RestaurantList', () => {
       );
       fireEvent.press(screen.getByText('Add'));
 
-      await act(flushPromises);
-    }
+      expect(api.post).toHaveBeenCalledWith('/restaurants', {name});
 
-    it('clears the new restaurant name field', async () => {
-      await addRestaurant();
+      await screen.findByText(name);
 
       expect(screen.getByPlaceholderText('New restaurant name')).toHaveProp(
         'value',
         '',
       );
-    });
-
-    it('makes the right request to the server', async () => {
-      await addRestaurant();
-
-      expect(api.post).toHaveBeenCalledWith('/restaurants', {name});
-    });
-
-    it('re-requests the data from the server', async () => {
-      await addRestaurant();
-
-      expect(screen.queryByText(name)).not.toBeNull();
     });
   });
 
@@ -149,7 +147,7 @@ describe('RestaurantList', () => {
   });
 
   describe('when deleting a restaurant succeeds', () => {
-    async function deleteRestaurant() {
+    it('removes the new restaurant after reloading from the server', async () => {
       api.get
         .mockResolvedValueOnce({data: restaurants})
         .mockResolvedValue({data: restaurants.filter(r => r.id !== 1)});
@@ -161,20 +159,13 @@ describe('RestaurantList', () => {
 
       fireEvent.press(screen.getAllByText('Delete')[0]);
 
-      await act(flushPromises);
-    }
-
-    it('sends the right data to the server', async () => {
-      await deleteRestaurant();
       expect(api.delete).toHaveBeenCalledWith(
         `/restaurants/${restaurants[0].id}`,
       );
-    });
 
-    it('re-requests the data from the server', async () => {
-      await deleteRestaurant();
-
-      expect(screen.queryByText(restaurants[0].name)).toBeNull();
+      await waitForElementToBeRemoved(() =>
+        screen.getByText(restaurants[0].name),
+      );
     });
   });
 
