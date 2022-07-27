@@ -10,7 +10,7 @@ import {
 import api from './api';
 
 export default function RestaurantList() {
-  const [data, setData] = useState([]);
+  const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [name, setName] = useState('');
@@ -18,7 +18,7 @@ export default function RestaurantList() {
 
   async function loadRestaurants() {
     const response = await api.get('/restaurants');
-    setData(response.data);
+    setRestaurants(response.data);
   }
 
   useEffect(() => {
@@ -43,9 +43,9 @@ export default function RestaurantList() {
     }
   }
 
-  async function handleDelete(item) {
+  async function handleDelete(restaurant) {
     try {
-      await api.delete(`/restaurants/${item.id}`);
+      await api.delete(`/restaurants/${restaurant.id}`);
       await loadRestaurants();
     } catch {
       setUpdateErrorMessage('An error occurred deleting the restaurant');
@@ -84,12 +84,15 @@ export default function RestaurantList() {
         <Text style={[styles.message, styles.error]}>{updateErrorMessage}</Text>
       )}
       <FlatList
-        data={data}
-        keyExtractor={item => item.id}
-        renderItem={({item}) => (
+        data={restaurants}
+        keyExtractor={restaurant => restaurant.id}
+        renderItem={({item: restaurant}) => (
           <View style={styles.restaurantRow}>
-            <Text style={styles.restaurantName}>{item.name}</Text>
-            <Pressable style={styles.button} onPress={() => handleDelete(item)}>
+            <Text style={styles.restaurantName}>{restaurant.name}</Text>
+            <Pressable
+              style={styles.button}
+              onPress={() => handleDelete(restaurant)}
+            >
               <Text>Delete</Text>
             </Pressable>
           </View>
