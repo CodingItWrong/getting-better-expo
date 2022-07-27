@@ -27,6 +27,7 @@
     "@testing-library/react-native": "^11.0.0",
     "eslint": "^7.0",
     "eslint-plugin-import": "^2.26.0",
+    "flush-promises": "^1.0.2",
     "jest": "^26",
     "jest-expo": "^45.0.1",
     "prettier": "^2.7.1"
