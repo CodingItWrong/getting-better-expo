@@ -1,12 +1,13 @@
 import React from 'react';
-import {SafeAreaView, StatusBar, Text} from 'react-native';
+import {SafeAreaView, StatusBar} from 'react-native';
+import RestaurantList from './src/RestaurantList';
 
 export default function App() {
   return (
     <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
-        <Text>Hello, React Native!</Text>
+        <RestaurantList />
       </SafeAreaView>
     </>
   );
