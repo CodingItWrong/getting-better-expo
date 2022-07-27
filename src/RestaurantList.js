@@ -9,12 +9,10 @@ import {
 } from 'react-native';
 import api from './api';
 
-export default function RestaurantList() {
+function useRestaurants() {
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [name, setName] = useState('');
-  const [updateErrorMessage, setUpdateErrorMessage] = useState(null);
 
   async function loadRestaurants() {
     const response = await api.get('/restaurants');
@@ -32,6 +30,15 @@ export default function RestaurantList() {
       }
     })();
   }, []);
+
+  return {restaurants, loading, error, loadRestaurants};
+}
+
+export default function RestaurantList() {
+  const {restaurants, loading, error, loadRestaurants} = useRestaurants();
+
+  const [name, setName] = useState('');
+  const [updateErrorMessage, setUpdateErrorMessage] = useState(null);
 
   async function handleAdd() {
     try {
