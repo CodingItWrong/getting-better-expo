@@ -20,4 +20,14 @@ describe('RestaurantList', () => {
       expect(screen.queryByText(restaurants[1].name)).not.toBeNull();
     });
   });
+
+  describe('when loading fails', () => {
+    it('renders an error message', async () => {
+      api.get.mockRejectedValue();
+
+      render(<RestaurantList />);
+
+      await screen.findByText('An error occurred loading restaurants');
+    });
+  });
 });
