@@ -110,4 +110,30 @@ describe('RestaurantList', () => {
       await screen.findByText('An error occurred adding the restaurant');
     });
   });
+
+  describe('when deleting a restaurant succeeds', () => {
+    it('re-requests data from the server', async () => {
+      api.delete.mockResolvedValue();
+
+      const reloadRestaurants = jest
+        .fn()
+        .mockName('reloadRestaurants')
+        .mockResolvedValue();
+
+      render(
+        <RestaurantList
+          restaurants={restaurants}
+          reloadRestaurants={reloadRestaurants}
+        />,
+      );
+
+      fireEvent.press(screen.getAllByText('Delete')[0]);
+
+      expect(api.delete).toHaveBeenCalledWith(
+        `/restaurants/${restaurants[0].id}`,
+      );
+
+      await waitFor(() => expect(reloadRestaurants).toHaveBeenCalledWith());
+    });
+  });
 });
