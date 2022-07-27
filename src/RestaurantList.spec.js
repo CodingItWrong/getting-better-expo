@@ -83,4 +83,20 @@ describe('RestaurantList', () => {
       expect(reloadRestaurants).toHaveBeenCalledWith();
     });
   });
+
+  describe('when adding a restaurant fails', () => {
+    it('shows an error message', async () => {
+      api.post.mockRejectedValue();
+
+      render(<RestaurantList restaurants={[]} />);
+
+      fireEvent.changeText(
+        screen.getByPlaceholderText('New restaurant name'),
+        'Burger Place',
+      );
+      fireEvent.press(screen.getByText('Add'));
+
+      await screen.findByText('An error occurred adding the restaurant');
+    });
+  });
 });
