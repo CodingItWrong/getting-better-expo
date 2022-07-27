@@ -114,4 +114,31 @@ describe('RestaurantList', () => {
       expect(screen.queryByText(name)).not.toBeNull();
     });
   });
+
+  describe('when adding a restaurant fails', () => {
+    async function addRestaurant() {
+      api.get.mockResolvedValue({data: restaurants});
+      api.post.mockRejectedValue();
+
+      render(<RestaurantList />);
+
+      await screen.findByText(restaurants[0].name);
+
+      fireEvent.changeText(
+        screen.getByPlaceholderText('New restaurant name'),
+        'Burger Place',
+      );
+      fireEvent.press(screen.getByText('Add'));
+
+      await act(flushPromises);
+    }
+
+    it('shows an error message', async () => {
+      await addRestaurant();
+
+      expect(
+        screen.queryByText('An error occurred adding the restaurant'),
+      ).not.toBeNull();
+    });
+  });
 });
