@@ -56,6 +56,7 @@ describe('RestaurantList', () => {
 
     it('clears the new restaurant name field', async () => {
       api.get.mockResolvedValue({data: restaurants});
+      api.post.mockResolvedValue();
 
       render(<RestaurantList />);
 
@@ -73,6 +74,8 @@ describe('RestaurantList', () => {
           '',
         ),
       );
+
+      expect(api.post).toHaveBeenCalledWith('/restaurants', {name});
     });
   });
 });
