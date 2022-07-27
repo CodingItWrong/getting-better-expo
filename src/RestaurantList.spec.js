@@ -73,9 +73,12 @@ describe('RestaurantList', () => {
 
   describe('when adding a restaurant succeeds', () => {
     const name = 'Burger Place';
+    const newRestaurant = {id: 3, name};
 
     async function addRestaurant() {
-      api.get.mockResolvedValue({data: restaurants});
+      api.get
+        .mockResolvedValueOnce({data: restaurants})
+        .mockResolvedValue({data: [...restaurants, newRestaurant]});
       api.post.mockResolvedValue();
 
       render(<RestaurantList />);
@@ -104,6 +107,12 @@ describe('RestaurantList', () => {
       await addRestaurant();
 
       expect(api.post).toHaveBeenCalledWith('/restaurants', {name});
+    });
+
+    it('re-requests the data from the server', async () => {
+      await addRestaurant();
+
+      expect(screen.queryByText(name)).not.toBeNull();
     });
   });
 });
