@@ -36,19 +36,7 @@ function useRestaurants() {
 
 export default function RestaurantList() {
   const {restaurants, loading, error, loadRestaurants} = useRestaurants();
-
-  const [name, setName] = useState('');
   const [updateErrorMessage, setUpdateErrorMessage] = useState(null);
-
-  async function handleAdd() {
-    try {
-      await api.post('/restaurants', {name});
-      await loadRestaurants();
-      setName('');
-    } catch {
-      setUpdateErrorMessage('An error occurred adding the restaurant');
-    }
-  }
 
   async function handleDelete(restaurant) {
     try {
@@ -69,6 +57,38 @@ export default function RestaurantList() {
 
   return (
     <View style={styles.container}>
+      <NewRestaurantForm onAdd={loadRestaurants} />
+      {updateErrorMessage && <Text>{updateErrorMessage}</Text>}
+      <FlatList
+        data={restaurants}
+        keyExtractor={restaurant => restaurant.id}
+        renderItem={({item: restaurant}) => (
+          <RestaurantRow
+            restaurant={restaurant}
+            handleDelete={() => handleDelete(restaurant)}
+          />
+        )}
+      />
+    </View>
+  );
+}
+
+function NewRestaurantForm({onAdd}) {
+  const [name, setName] = useState('');
+  const [error, setError] = useState(null);
+
+  async function handleAdd() {
+    try {
+      await api.post('/restaurants', {name});
+      await onAdd();
+      setName('');
+    } catch {
+      setError('An error occurred adding the restaurant');
+    }
+  }
+
+  return (
+    <>
       <View style={styles.addRow}>
         <TextInput
           placeholder="New restaurant name"
@@ -83,22 +103,18 @@ export default function RestaurantList() {
           <Text>Add</Text>
         </Pressable>
       </View>
-      {updateErrorMessage && <Text>{updateErrorMessage}</Text>}
-      <FlatList
-        data={restaurants}
-        keyExtractor={restaurant => restaurant.id}
-        renderItem={({item: restaurant}) => (
-          <View style={styles.restaurantRow}>
-            <Text style={styles.restaurantName}>{restaurant.name}</Text>
-            <Pressable
-              style={styles.button}
-              onPress={() => handleDelete(restaurant)}
-            >
-              <Text>Delete</Text>
-            </Pressable>
-          </View>
-        )}
-      />
+      {error && <Text>{error}</Text>}
+    </>
+  );
+}
+
+function RestaurantRow({restaurant, handleDelete}) {
+  return (
+    <View style={styles.restaurantRow}>
+      <Text style={styles.restaurantName}>{restaurant.name}</Text>
+      <Pressable style={styles.button} onPress={handleDelete}>
+        <Text>Delete</Text>
+      </Pressable>
     </View>
   );
 }
