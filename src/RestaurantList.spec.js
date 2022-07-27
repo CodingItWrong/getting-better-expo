@@ -53,9 +53,12 @@ describe('RestaurantList', () => {
 
   describe('when adding a restaurant succeeds', () => {
     const name = 'Burger Place';
+    const newRestaurant = {id: 3, name};
 
     it('clears the new restaurant name field', async () => {
-      api.get.mockResolvedValue({data: restaurants});
+      api.get
+        .mockResolvedValueOnce({data: restaurants})
+        .mockResolvedValue({data: [...restaurants, newRestaurant]});
       api.post.mockResolvedValue();
 
       render(<RestaurantList />);
@@ -76,6 +79,8 @@ describe('RestaurantList', () => {
       );
 
       expect(api.post).toHaveBeenCalledWith('/restaurants', {name});
+
+      expect(screen.queryByText(name)).not.toBeNull();
     });
   });
 });

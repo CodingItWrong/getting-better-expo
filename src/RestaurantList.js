@@ -37,7 +37,15 @@ export default function RestaurantList() {
         onChangeText={setName}
       />
       <Pressable
-        onPress={() => api.post('/restaurants', {name}).then(() => setName(''))}
+        onPress={() =>
+          api
+            .post('/restaurants', {name})
+            .then(() => api.get('/restaurants'))
+            .then(response => {
+              setData(response.data);
+              setName('');
+            })
+        }
       >
         <Text>Add</Text>
       </Pressable>
