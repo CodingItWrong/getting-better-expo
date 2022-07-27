@@ -4,14 +4,25 @@ import api from './api';
 
 export default function RestaurantList() {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     api
       .get('/restaurants')
-      .then(response => setData(response.data))
-      .catch(() => setError(true));
+      .then(response => {
+        setLoading(false);
+        setData(response.data);
+      })
+      .catch(() => {
+        setLoading(false);
+        setError(true);
+      });
   }, []);
+
+  if (loading) {
+    return <Text>Loading…</Text>;
+  }
 
   if (error) {
     return <Text>An error occurred loading restaurants</Text>;
