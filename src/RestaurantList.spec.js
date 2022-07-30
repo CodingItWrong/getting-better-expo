@@ -4,6 +4,7 @@ import {
   screen,
   waitFor,
 } from '@testing-library/react-native';
+import {Provider as PaperProvider} from 'react-native-paper';
 import RestaurantList from './RestaurantList';
 import api from './api';
 
@@ -16,7 +17,7 @@ describe('RestaurantList', () => {
   ];
 
   function providers(children) {
-    return children;
+    return <PaperProvider>{children}</PaperProvider>;
   }
 
   describe('while loading', () => {
