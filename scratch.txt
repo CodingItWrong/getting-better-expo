@@ -1,0 +1,52 @@
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  addRow: {
+    flexDirection: 'row',
+    alignContent: 'end',
+    padding: 8,
+  },
+  newRestaurantNameField: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 4,
+  },
+  message: {
+    fontSize: 18,
+    padding: 8,
+  },
+  error: {
+    color: 'red',
+    fontSize: 18,
+    padding: 8,
+  },
+  restaurantRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderColor: '#ccc',
+    padding: 8,
+  },
+  restaurantName: {
+    flex: 1,
+    fontSize: 18,
+  },
+  button: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    backgroundColor: '#eee',
+  },
+  buttonTextDisabled: {
+    color: '#999',
+  },
+  addButton: {
+    marginLeft: 8,
+  },
+});
