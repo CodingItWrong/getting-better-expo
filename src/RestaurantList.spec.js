@@ -6,4 +6,13 @@ describe('RestaurantList', () => {
     {id: 1, name: 'Pizza Place'},
     {id: 2, name: 'Salad Place'},
   ];
+
+  describe('when loading succeeds', () => {
+    it('renders restaurants from the server', () => {
+      render(<RestaurantList restaurants={restaurants} />);
+
+      expect(screen.queryByText(restaurants[0].name)).toBeTruthy();
+      expect(screen.queryByText(restaurants[1].name)).toBeTruthy();
+    });
+  });
 });
