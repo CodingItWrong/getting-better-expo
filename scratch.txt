@@ -1,0 +1,16 @@
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  message: {
+    fontSize: 18,
+    padding: 10,
+  },
+  error: {
+    color: 'red',
+  },
+  restaurantName: {
+    fontSize: 18,
+    padding: 10,
+  },
+});

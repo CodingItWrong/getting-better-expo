@@ -1,12 +1,19 @@
-import {SafeAreaView, StatusBar, Text} from 'react-native';
+import {SafeAreaView, StatusBar, StyleSheet} from 'react-native';
+import RestaurantList from './src/RestaurantList';
 
 export default function App() {
   return (
     <>
       <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <Text>Hello, React Native!</Text>
+      <SafeAreaView style={styles.safeArea}>
+        <RestaurantList />
       </SafeAreaView>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
+});
