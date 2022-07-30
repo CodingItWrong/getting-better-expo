@@ -1,12 +1,6 @@
 import {useEffect, useState} from 'react';
-import {
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import {FlatList, StyleSheet, View} from 'react-native';
+import {Button, List, Text, TextInput} from 'react-native-paper';
 import api from './api';
 
 function useRestaurants() {
@@ -91,17 +85,15 @@ function NewRestaurantForm({onAdd}) {
     <>
       <View style={styles.addRow}>
         <TextInput
+          mode="outlined"
           placeholder="New restaurant name"
           value={name}
           onChangeText={setName}
           style={styles.newRestaurantNameField}
         />
-        <Pressable
-          style={[styles.button, styles.addButton]}
-          onPress={handleAdd}
-        >
-          <Text>Add</Text>
-        </Pressable>
+        <Button mode="contained" style={styles.addButton} onPress={handleAdd}>
+          Add
+        </Button>
       </View>
       {error && <Text>{error}</Text>}
     </>
@@ -110,12 +102,18 @@ function NewRestaurantForm({onAdd}) {
 
 function RestaurantRow({restaurant, handleDelete}) {
   return (
-    <View style={styles.restaurantRow}>
-      <Text style={styles.restaurantName}>{restaurant.name}</Text>
-      <Pressable style={styles.button} onPress={handleDelete}>
-        <Text>Delete</Text>
-      </Pressable>
-    </View>
+    <List.Item
+      title={restaurant.name}
+      right={() => rightButton(handleDelete)}
+    />
+  );
+}
+
+function rightButton(handlePress) {
+  return (
+    <Button mode="outline" onPress={handlePress}>
+      Delete
+    </Button>
   );
 }
 
@@ -125,35 +123,11 @@ const styles = StyleSheet.create({
   },
   addRow: {
     flexDirection: 'row',
-    alignContent: 'end',
+    alignItems: 'center',
     padding: 8,
   },
   newRestaurantNameField: {
     flex: 1,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 4,
-  },
-  restaurantRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderColor: '#ccc',
-    padding: 8,
-  },
-  restaurantName: {
-    flex: 1,
-    fontSize: 18,
-  },
-  button: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    backgroundColor: '#eee',
   },
   addButton: {
     marginLeft: 8,
