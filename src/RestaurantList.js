@@ -16,6 +16,8 @@ export default function RestaurantList() {
   const [name, setName] = useState('');
   const [updateErrorMessage, setUpdateErrorMessage] = useState(null);
 
+  console.log({data});
+
   useEffect(() => {
     api
       .get('/restaurants')

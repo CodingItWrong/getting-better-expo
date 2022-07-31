@@ -3,6 +3,7 @@ import {
   fireEvent,
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react-native';
 import flushPromises from 'flush-promises';
@@ -35,10 +36,14 @@ describe('RestaurantList', () => {
       render(<RestaurantList />);
     }
 
-    it('renders restaurants from the server', async () => {
+    it.only('renders restaurants from the server', async () => {
       renderRestaurants();
 
-      await screen.findByText(restaurants[0].name);
+      await waitFor(() => {
+        screen.debug();
+        screen.getByText(restaurants[0].name);
+      });
+      // await screen.findByText(restaurants[0].name);
       expect(screen.queryByText(restaurants[1].name)).not.toBeNull();
     });
 
