@@ -1,12 +1,12 @@
 import {SafeAreaView, StatusBar, StyleSheet} from 'react-native';
-import RestaurantList from './src/RestaurantList';
+import RestaurantListContainer from './src/RestaurantListContainer';
 
 export default function App() {
   return (
     <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView style={styles.safeArea}>
-        <RestaurantList />
+        <RestaurantListContainer />
       </SafeAreaView>
     </>
   );
