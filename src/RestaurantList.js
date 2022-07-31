@@ -1,15 +1,8 @@
 import {useState} from 'react';
-import {
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import {FlatList, StyleSheet, View} from 'react-native';
+import {Button, Text, TextInput} from 'react-native-paper';
 import RestaurantRow from './RestaurantRow';
 import api from './api';
-import sharedStyles from './sharedStyles';
 
 export default function RestaurantList({
   restaurants,
@@ -56,21 +49,21 @@ export default function RestaurantList({
     <View style={styles.container}>
       <View style={styles.addRow}>
         <TextInput
+          mode="outlined"
           placeholder="New restaurant name"
           value={name}
           onChangeText={setName}
           style={styles.newRestaurantNameField}
         />
-        <Pressable
+        <Button
           testID="add-button"
           disabled={adding}
-          style={[sharedStyles.button, styles.addButton]}
+          mode="contained"
+          style={styles.addButton}
           onPress={handleAdd}
         >
-          <Text style={adding && styles.buttonTextDisabled}>
-            {adding ? 'Adding…' : 'Add'}
-          </Text>
-        </Pressable>
+          {adding ? 'Adding…' : 'Add'}
+        </Button>
       </View>
       {updateErrorMessage && (
         <Text style={styles.error}>{updateErrorMessage}</Text>
@@ -95,14 +88,11 @@ const styles = StyleSheet.create({
   },
   addRow: {
     flexDirection: 'row',
-    alignContent: 'end',
+    alignItems: 'center',
     padding: 8,
   },
   newRestaurantNameField: {
     flex: 1,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 4,
   },
   message: {
     fontSize: 18,
