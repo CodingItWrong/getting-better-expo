@@ -19,27 +19,25 @@ export default function RestaurantList({
   const [adding, setAdding] = useState(false);
   const [updateErrorMessage, setUpdateErrorMessage] = useState(null);
 
-  function handleAdd() {
-    setAdding(true);
-    api
-      .post('/restaurants', {name})
-      .then(() => reloadRestaurants())
-      .then(() => {
-        setName('');
-        setAdding(false);
-      })
-      .catch(() =>
-        setUpdateErrorMessage('An error occurred adding the restaurant'),
-      );
+  async function handleAdd() {
+    try {
+      setAdding(true);
+      await api.post('/restaurants', {name});
+      await reloadRestaurants();
+      setName('');
+      setAdding(false);
+    } catch {
+      setUpdateErrorMessage('An error occurred adding the restaurant');
+    }
   }
 
-  function handleDelete(item) {
-    api
-      .delete(`/restaurants/${item.id}`)
-      .then(() => reloadRestaurants())
-      .catch(() =>
-        setUpdateErrorMessage('An error occurred deleting the restaurant'),
-      );
+  async function handleDelete(item) {
+    try {
+      await api.delete(`/restaurants/${item.id}`);
+      await reloadRestaurants();
+    } catch {
+      setUpdateErrorMessage('An error occurred deleting the restaurant');
+    }
   }
 
   if (loading) {
