@@ -33,20 +33,19 @@ describe('RestaurantList', () => {
       api.get.mockResolvedValue({data: restaurants});
 
       render(<RestaurantList />);
-
-      await act(flushPromises);
     }
 
     it('renders restaurants from the server', async () => {
-      await renderRestaurants();
-      expect(screen.queryByText(restaurants[0].name)).not.toBeNull();
+      renderRestaurants();
+
+      await screen.findByText(restaurants[0].name);
       expect(screen.queryByText(restaurants[1].name)).not.toBeNull();
     });
 
     it('hides the loading indicator', async () => {
-      await renderRestaurants();
+      renderRestaurants();
 
-      expect(screen.queryByText('Loading…')).toBeNull();
+      await waitForElementToBeRemoved(() => screen.getByText('Loading…'));
     });
   });
 
