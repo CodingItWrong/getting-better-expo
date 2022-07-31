@@ -1,6 +1,5 @@
 import {useState} from 'react';
-import {Pressable, StyleSheet, Text, View} from 'react-native';
-import sharedStyles from './sharedStyles';
+import {Button, List} from 'react-native-paper';
 
 export default function RestaurantRow({restaurant, onDelete}) {
   const [deleting, setDeleting] = useState(false);
@@ -15,35 +14,22 @@ export default function RestaurantRow({restaurant, onDelete}) {
   }
 
   return (
-    <View style={styles.restaurantRow}>
-      <Text style={styles.restaurantName}>{restaurant.name}</Text>
-      <Pressable
-        testID="delete-button"
-        style={sharedStyles.button}
-        disabled={deleting}
-        onPress={handleDelete}
-      >
-        <Text style={deleting && sharedStyles.buttonTextDisabled}>
-          {deleting ? 'Deleting…' : 'Delete'}
-        </Text>
-      </Pressable>
-    </View>
+    <List.Item
+      title={restaurant.name}
+      right={() => deleteButton({deleting, handleDelete})}
+    />
   );
 }
 
-const styles = StyleSheet.create({
-  restaurantRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderColor: '#ccc',
-    padding: 8,
-  },
-  restaurantName: {
-    flex: 1,
-    fontSize: 18,
-  },
-  addButton: {
-    marginLeft: 8,
-  },
-});
+function deleteButton({deleting, handleDelete}) {
+  return (
+    <Button
+      testID="delete-button"
+      mode="outlined"
+      disabled={deleting}
+      onPress={handleDelete}
+    >
+      {deleting ? 'Deleting…' : 'Delete'}
+    </Button>
+  );
+}

@@ -1,5 +1,6 @@
 import {useState} from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {FlatList, StyleSheet, View} from 'react-native';
+import {Text} from 'react-native-paper';
 import NewRestaurantForm from './NewRestaurantForm';
 import RestaurantRow from './RestaurantRow';
 import api from './api';

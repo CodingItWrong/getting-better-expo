@@ -1,7 +1,7 @@
 import {useState} from 'react';
-import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import {Button, TextInput} from 'react-native-paper';
 import api from './api';
-import sharedStyles from './sharedStyles';
 
 export default function NewRestaurantForm({onSuccess, onError}) {
   const [name, setName] = useState('');
@@ -22,21 +22,21 @@ export default function NewRestaurantForm({onSuccess, onError}) {
   return (
     <View style={styles.addRow}>
       <TextInput
+        mode="outlined"
         placeholder="New restaurant name"
         value={name}
         onChangeText={setName}
         style={styles.newRestaurantNameField}
       />
-      <Pressable
+      <Button
         testID="add-button"
         disabled={adding}
-        style={[sharedStyles.button, styles.addButton]}
+        mode="contained"
+        style={styles.addButton}
         onPress={handleAdd}
       >
-        <Text style={adding && sharedStyles.buttonTextDisabled}>
-          {adding ? 'Adding…' : 'Add'}
-        </Text>
-      </Pressable>
+        {adding ? 'Adding…' : 'Add'}
+      </Button>
     </View>
   );
 }
@@ -44,13 +44,11 @@ export default function NewRestaurantForm({onSuccess, onError}) {
 const styles = StyleSheet.create({
   addRow: {
     flexDirection: 'row',
+    alignItems: 'center',
     padding: 8,
   },
   newRestaurantNameField: {
     flex: 1,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 4,
   },
   addButton: {
     marginLeft: 8,
