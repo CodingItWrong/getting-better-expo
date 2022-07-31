@@ -15,9 +15,13 @@ describe('RestaurantList', () => {
     {id: 2, name: 'Salad Place'},
   ];
 
+  function providers(children) {
+    return children;
+  }
+
   describe('while loading', () => {
     it('shows a loading indicator', () => {
-      render(<RestaurantList loading />);
+      render(providers(<RestaurantList loading />));
 
       expect(screen.queryByText('Loading…')).not.toBeNull();
     });
@@ -25,7 +29,7 @@ describe('RestaurantList', () => {
 
   describe('when loading succeeds', () => {
     it('renders restaurants from the server', () => {
-      render(<RestaurantList restaurants={restaurants} />);
+      render(providers(<RestaurantList restaurants={restaurants} />));
 
       expect(screen.queryByText(restaurants[0].name)).not.toBeNull();
       expect(screen.queryByText(restaurants[1].name)).not.toBeNull();
@@ -36,7 +40,7 @@ describe('RestaurantList', () => {
 
   describe('when loading fails', () => {
     it('renders an error message', () => {
-      render(<RestaurantList loadError />);
+      render(providers(<RestaurantList loadError />));
 
       expect(
         screen.queryByText('An error occurred loading restaurants'),
@@ -58,10 +62,12 @@ describe('RestaurantList', () => {
         .mockResolvedValue();
 
       render(
-        <RestaurantList
-          restaurants={[]}
-          reloadRestaurants={reloadRestaurants}
-        />,
+        providers(
+          <RestaurantList
+            restaurants={[]}
+            reloadRestaurants={reloadRestaurants}
+          />,
+        ),
       );
 
       fireEvent.changeText(
@@ -97,7 +103,7 @@ describe('RestaurantList', () => {
     it('shows an error message', async () => {
       api.post.mockRejectedValue();
 
-      render(<RestaurantList restaurants={[]} />);
+      render(providers(<RestaurantList restaurants={[]} />));
 
       fireEvent.changeText(
         screen.getByPlaceholderText('New restaurant name'),
@@ -119,10 +125,12 @@ describe('RestaurantList', () => {
         .mockResolvedValue();
 
       render(
-        <RestaurantList
-          restaurants={restaurants}
-          reloadRestaurants={reloadRestaurants}
-        />,
+        providers(
+          <RestaurantList
+            restaurants={restaurants}
+            reloadRestaurants={reloadRestaurants}
+          />,
+        ),
       );
 
       fireEvent.press(screen.getAllByText('Delete')[0]);
@@ -139,7 +147,7 @@ describe('RestaurantList', () => {
     it('shows an error message', async () => {
       api.delete.mockRejectedValue();
 
-      render(<RestaurantList restaurants={restaurants} />);
+      render(providers(<RestaurantList restaurants={restaurants} />));
 
       fireEvent.press(screen.getAllByText('Delete')[0]);
 
