@@ -1,30 +1,27 @@
-import {useEffect, useState} from 'react';
+import {useQuery, useQueryClient} from '@tanstack/react-query';
 import RestaurantList from './RestaurantList';
 import api from './api';
 
-function useRestaurants() {
-  const [restaurants, setRestaurants] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState(null);
+const RESTAURANTS_QUERY = 'RESTAURANTS_QUERY';
 
+function useRestaurants() {
   async function loadRestaurants() {
     const response = await api.get('/restaurants');
-    setRestaurants(response.data);
+    return response.data;
   }
 
-  useEffect(() => {
-    (async () => {
-      try {
-        await loadRestaurants();
-      } catch {
-        setLoadError(true);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
+  function reloadRestaurants() {
+    queryClient.invalidateQueries(RESTAURANTS_QUERY);
+  }
 
-  return {restaurants, loading, loadError, reloadRestaurants: loadRestaurants};
+  const queryClient = useQueryClient();
+  const restaurantsResult = useQuery([RESTAURANTS_QUERY], loadRestaurants);
+
+  const restaurants = restaurantsResult.data ?? [];
+  const loading = restaurantsResult.isLoading;
+  const loadError = restaurantsResult.isError;
+
+  return {restaurants, loading, loadError, reloadRestaurants};
 }
 
 export default function RestaurantListContainer() {
