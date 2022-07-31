@@ -70,6 +70,11 @@ describe('RestaurantList', () => {
       );
       fireEvent.press(screen.getByText('Add'));
 
+      expect(screen.queryByText('Adding…')).not.toBeNull();
+      expect(
+        screen.getByTestId('add-button').props.accessibilityState.disabled,
+      ).toEqual(true);
+
       expect(api.post).toHaveBeenCalledWith('/restaurants', {name});
 
       await waitFor(() =>
@@ -78,6 +83,11 @@ describe('RestaurantList', () => {
           '',
         ),
       );
+
+      expect(screen.queryByText('Adding…')).toBeNull();
+      expect(
+        screen.getByTestId('add-button').props.accessibilityState.disabled,
+      ).toEqual(false);
 
       expect(reloadRestaurants).toHaveBeenCalledWith();
     });
