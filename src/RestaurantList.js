@@ -77,14 +77,23 @@ export default function RestaurantList({
         data={restaurants}
         keyExtractor={item => item.id}
         renderItem={({item}) => (
-          <View style={styles.restaurantRow}>
-            <Text style={styles.restaurantName}>{item.name}</Text>
-            <Pressable style={styles.button} onPress={() => handleDelete(item)}>
-              <Text>Delete</Text>
-            </Pressable>
-          </View>
+          <RestaurantRow
+            restaurant={item}
+            onDelete={() => handleDelete(item)}
+          />
         )}
       />
+    </View>
+  );
+}
+
+function RestaurantRow({restaurant, onDelete}) {
+  return (
+    <View style={styles.restaurantRow}>
+      <Text style={styles.restaurantName}>{restaurant.name}</Text>
+      <Pressable style={styles.button} onPress={onDelete}>
+        <Text>Delete</Text>
+      </Pressable>
     </View>
   );
 }
