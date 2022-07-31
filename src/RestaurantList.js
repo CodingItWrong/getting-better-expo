@@ -7,7 +7,9 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import RestaurantRow from './RestaurantRow';
 import api from './api';
+import sharedStyles from './sharedStyles';
 
 export default function RestaurantList({
   restaurants,
@@ -62,7 +64,7 @@ export default function RestaurantList({
         <Pressable
           testID="add-button"
           disabled={adding}
-          style={[styles.button, styles.addButton]}
+          style={[sharedStyles.button, styles.addButton]}
           onPress={handleAdd}
         >
           <Text style={adding && styles.buttonTextDisabled}>
@@ -83,34 +85,6 @@ export default function RestaurantList({
           />
         )}
       />
-    </View>
-  );
-}
-
-function RestaurantRow({restaurant, onDelete}) {
-  const [deleting, setDeleting] = useState(false);
-
-  async function handleDelete() {
-    try {
-      setDeleting(true);
-      await onDelete();
-    } catch {
-      setDeleting(false);
-    }
-  }
-
-  return (
-    <View style={styles.restaurantRow}>
-      <Text style={styles.restaurantName}>{restaurant.name}</Text>
-      <Pressable
-        style={styles.button}
-        disabled={deleting}
-        onPress={handleDelete}
-      >
-        <Text style={deleting && styles.buttonTextDisabled}>
-          {deleting ? 'Deleting…' : 'Delete'}
-        </Text>
-      </Pressable>
     </View>
   );
 }
@@ -138,30 +112,6 @@ const styles = StyleSheet.create({
     color: 'red',
     fontSize: 18,
     padding: 8,
-  },
-  restaurantRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderColor: '#ccc',
-    padding: 8,
-  },
-  restaurantName: {
-    flex: 1,
-    fontSize: 18,
-  },
-  button: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    backgroundColor: '#eee',
-  },
-  buttonTextDisabled: {
-    color: '#999',
   },
   addButton: {
     marginLeft: 8,
