@@ -1,12 +1,7 @@
 import {useState} from 'react';
-import {
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
+import NewRestaurantForm from './NewRestaurantForm';
+import RestaurantRow from './RestaurantRow';
 import api from './api';
 
 export default function RestaurantList({
@@ -62,85 +57,9 @@ export default function RestaurantList({
   );
 }
 
-function NewRestaurantForm({onSuccess, onError}) {
-  const [name, setName] = useState('');
-  const [adding, setAdding] = useState(false);
-
-  async function handleAdd() {
-    try {
-      setAdding(true);
-      await api.post('/restaurants', {name});
-      await onSuccess();
-      setName('');
-      setAdding(false);
-    } catch {
-      onError();
-    }
-  }
-
-  return (
-    <View style={styles.addRow}>
-      <TextInput
-        placeholder="New restaurant name"
-        value={name}
-        onChangeText={setName}
-        style={styles.newRestaurantNameField}
-      />
-      <Pressable
-        testID="add-button"
-        disabled={adding}
-        style={[styles.button, styles.addButton]}
-        onPress={handleAdd}
-      >
-        <Text style={adding && styles.buttonTextDisabled}>
-          {adding ? 'Adding…' : 'Add'}
-        </Text>
-      </Pressable>
-    </View>
-  );
-}
-
-function RestaurantRow({restaurant, onDelete}) {
-  const [deleting, setDeleting] = useState(false);
-
-  async function handleDelete() {
-    try {
-      setDeleting(true);
-      await onDelete();
-    } catch {
-      setDeleting(false);
-    }
-  }
-
-  return (
-    <View style={styles.restaurantRow}>
-      <Text style={styles.restaurantName}>{restaurant.name}</Text>
-      <Pressable
-        style={styles.button}
-        disabled={deleting}
-        onPress={handleDelete}
-      >
-        <Text style={deleting && styles.buttonTextDisabled}>
-          {deleting ? 'Deleting…' : 'Delete'}
-        </Text>
-      </Pressable>
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  addRow: {
-    flexDirection: 'row',
-    padding: 8,
-  },
-  newRestaurantNameField: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 4,
   },
   message: {
     fontSize: 18,
@@ -150,32 +69,5 @@ const styles = StyleSheet.create({
     color: 'red',
     fontSize: 18,
     padding: 8,
-  },
-  restaurantRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderColor: '#ccc',
-    padding: 8,
-  },
-  restaurantName: {
-    flex: 1,
-    fontSize: 18,
-  },
-  button: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    backgroundColor: '#eee',
-  },
-  buttonTextDisabled: {
-    color: '#999',
-  },
-  addButton: {
-    marginLeft: 8,
   },
 });
