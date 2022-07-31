@@ -49,6 +49,7 @@ describe('RestaurantList', () => {
 
   describe('when adding a restaurant succeeds', () => {
     const name = 'Burger Place';
+    const addingLabel = 'Adding…';
 
     it('clears the new restaurant name field', async () => {
       api.post.mockResolvedValue();
@@ -71,6 +72,11 @@ describe('RestaurantList', () => {
       );
       fireEvent.press(screen.getByText('Add'));
 
+      expect(screen.queryByText(addingLabel)).not.toBeNull();
+      expect(
+        screen.getByTestId('add-button').props.accessibilityState.disabled,
+      ).toEqual(true);
+
       expect(api.post).toHaveBeenCalledWith('/restaurants', {name});
 
       await waitFor(() =>
@@ -79,6 +85,11 @@ describe('RestaurantList', () => {
           '',
         ),
       );
+
+      expect(screen.queryByText(addingLabel)).toBeNull();
+      expect(
+        screen.getByTestId('add-button').props.accessibilityState.disabled,
+      ).toEqual(false);
 
       expect(reloadRestaurants).toHaveBeenCalledWith();
     });
