@@ -31,6 +31,15 @@ export default function RestaurantList({
     }
   }
 
+  async function handleDelete(item) {
+    try {
+      await api.delete(`/restaurants/${item.id}`);
+      await reloadRestaurants();
+    } catch {
+      setUpdateErrorMessage('An error occurred deleting the restaurant');
+    }
+  }
+
   if (loading) {
     return <Text style={styles.message}>Loading…</Text>;
   }
@@ -70,10 +79,7 @@ export default function RestaurantList({
         renderItem={({item}) => (
           <RestaurantRow
             restaurant={item}
-            onDeleteSuccess={() => reloadRestaurants()}
-            onDeleteError={() =>
-              setUpdateErrorMessage('An error occurred deleting the restaurant')
-            }
+            onDelete={() => handleDelete(item)}
           />
         )}
       />
@@ -81,20 +87,11 @@ export default function RestaurantList({
   );
 }
 
-function RestaurantRow({restaurant, onDeleteSuccess, onDeleteError}) {
-  async function handleDelete() {
-    try {
-      await api.delete(`/restaurants/${restaurant.id}`);
-      onDeleteSuccess();
-    } catch {
-      onDeleteError();
-    }
-  }
-
+function RestaurantRow({restaurant, onDelete}) {
   return (
     <View style={styles.restaurantRow}>
       <Text style={styles.restaurantName}>{restaurant.name}</Text>
-      <Pressable style={styles.button} onPress={handleDelete}>
+      <Pressable style={styles.button} onPress={onDelete}>
         <Text>Delete</Text>
       </Pressable>
     </View>
