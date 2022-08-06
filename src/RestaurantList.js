@@ -12,6 +12,7 @@ import api from './api';
 export default function RestaurantList() {
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
   const [name, setName] = useState('');
   const [updateErrorMessage, setUpdateErrorMessage] = useState(null);
@@ -32,6 +33,12 @@ export default function RestaurantList() {
       }
     })();
   }, []);
+
+  async function handleRefresh() {
+    setRefreshing(true);
+    await loadRestaurants();
+    setRefreshing(false);
+  }
 
   async function handleAdd() {
     try {
@@ -84,6 +91,8 @@ export default function RestaurantList() {
         <Text style={[styles.message, styles.error]}>{updateErrorMessage}</Text>
       )}
       <FlatList
+        refreshing={refreshing}
+        onRefresh={handleRefresh}
         data={restaurants}
         keyExtractor={restaurant => restaurant.id}
         renderItem={({item: restaurant}) => (
