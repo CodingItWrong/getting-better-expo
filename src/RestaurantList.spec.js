@@ -38,8 +38,9 @@ describe('RestaurantList', () => {
     }
 
     it('renders restaurants from the server', async () => {
-      await renderRestaurants();
-      expect(screen.queryByText(restaurants[0].name)).not.toBeNull();
+      renderRestaurants();
+      await screen.findByText(restaurants[0].name);
+      // expect(screen.queryByText(restaurants[0].name)).not.toBeNull();
       expect(screen.queryByText(restaurants[1].name)).not.toBeNull();
     });
 
