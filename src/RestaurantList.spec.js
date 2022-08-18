@@ -128,6 +128,7 @@ describe('RestaurantList', () => {
       );
 
       fireEvent.press(screen.getAllByText('Delete')[0]);
+      expect(screen.queryByText('Deleting…')).toBeTruthy();
 
       expect(api.delete).toHaveBeenCalledWith(
         `/restaurants/${restaurants[0].id}`,
@@ -144,8 +145,10 @@ describe('RestaurantList', () => {
       render(<RestaurantList restaurants={restaurants} />);
 
       fireEvent.press(screen.getAllByText('Delete')[0]);
+      expect(screen.queryByText('Deleting…')).toBeTruthy();
 
       await screen.findByText('An error occurred deleting the restaurant');
+      expect(screen.queryByText('Deleting…')).toBeNull();
     });
   });
 });
