@@ -1,6 +1,6 @@
-# My Project
+# Getting Better All the Time: How to Escape Bad Code
 
-Describe your project here.
+This repo is the example code from the talk "Getting Better All the Time: How to Escape Bad Code" presented at React Native EU 2022.
 
 ## Requirements
 
@@ -26,3 +26,7 @@ Dependencies are locked with `yarn.lock`; please use `yarn` rather than `npm` fo
 ## Unit Tests
 
 - Run `yarn test`
+
+## License
+
+MIT
