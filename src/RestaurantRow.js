@@ -18,6 +18,7 @@ export default function RestaurantRow({restaurant, onDelete}) {
     <View style={styles.restaurantRow}>
       <Text style={styles.restaurantName}>{restaurant.name}</Text>
       <Pressable
+        testID="delete-button"
         style={sharedStyles.button}
         disabled={deleting}
         onPress={handleDelete}
