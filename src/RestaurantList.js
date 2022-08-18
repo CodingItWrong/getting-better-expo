@@ -15,21 +15,7 @@ export default function RestaurantList({
   loading,
   loadError,
 }) {
-  const [name, setName] = useState('');
-  const [adding, setAdding] = useState(false);
   const [updateErrorMessage, setUpdateErrorMessage] = useState(null);
-
-  async function handleAdd() {
-    try {
-      setAdding(true);
-      await api.post('/restaurants', {name});
-      await reloadRestaurants();
-      setName('');
-      setAdding(false);
-    } catch {
-      setUpdateErrorMessage('An error occurred adding the restaurant');
-    }
-  }
 
   async function handleDelete(item) {
     try {
@@ -53,24 +39,12 @@ export default function RestaurantList({
 
   return (
     <View style={styles.container}>
-      <View style={styles.addRow}>
-        <TextInput
-          placeholder="New restaurant name"
-          value={name}
-          onChangeText={setName}
-          style={styles.newRestaurantNameField}
-        />
-        <Pressable
-          testID="add-button"
-          disabled={adding}
-          style={[styles.button, styles.addButton]}
-          onPress={handleAdd}
-        >
-          <Text style={adding && styles.buttonTextDisabled}>
-            {adding ? 'Adding…' : 'Add'}
-          </Text>
-        </Pressable>
-      </View>
+      <NewRestaurantForm
+        onSuccess={reloadRestaurants}
+        onError={() =>
+          setUpdateErrorMessage('An error occurred adding the restaurant')
+        }
+      />
       {updateErrorMessage && (
         <Text style={styles.error}>{updateErrorMessage}</Text>
       )}
@@ -84,6 +58,44 @@ export default function RestaurantList({
           />
         )}
       />
+    </View>
+  );
+}
+
+function NewRestaurantForm({onSuccess, onError}) {
+  const [name, setName] = useState('');
+  const [adding, setAdding] = useState(false);
+
+  async function handleAdd() {
+    try {
+      setAdding(true);
+      await api.post('/restaurants', {name});
+      await onSuccess();
+      setName('');
+      setAdding(false);
+    } catch {
+      onError();
+    }
+  }
+
+  return (
+    <View style={styles.addRow}>
+      <TextInput
+        placeholder="New restaurant name"
+        value={name}
+        onChangeText={setName}
+        style={styles.newRestaurantNameField}
+      />
+      <Pressable
+        testID="add-button"
+        disabled={adding}
+        style={[styles.button, styles.addButton]}
+        onPress={handleAdd}
+      >
+        <Text style={adding && styles.buttonTextDisabled}>
+          {adding ? 'Adding…' : 'Add'}
+        </Text>
+      </Pressable>
     </View>
   );
 }
