@@ -147,7 +147,19 @@ describe('RestaurantList', () => {
 
       fireEvent.press(screen.getAllByText('Delete')[0]);
 
+      expect(screen.queryByText('Deleting…')).toBeTruthy();
+      expect(screen.getAllByTestId('delete-button')[0]).toHaveProp(
+        'accessibilityState',
+        {disabled: true},
+      );
+
       await screen.findByText('An error occurred deleting the restaurant');
+
+      expect(screen.queryByText('Deleting…')).toBeNull();
+      expect(screen.getAllByTestId('delete-button')[0]).toHaveProp(
+        'accessibilityState',
+        {disabled: false},
+      );
     });
   });
 });

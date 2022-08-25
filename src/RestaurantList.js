@@ -35,8 +35,9 @@ export default function RestaurantList({
     try {
       await api.delete(`/restaurants/${restaurant.id}`);
       await reloadRestaurants();
-    } catch {
+    } catch (e) {
       setUpdateErrorMessage('An error occurred deleting the restaurant');
+      throw e;
     }
   }
 
