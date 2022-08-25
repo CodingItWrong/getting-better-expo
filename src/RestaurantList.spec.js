@@ -13,6 +13,10 @@ describe('RestaurantList', () => {
 
       expect(screen.queryByText(restaurants[0].name)).toBeTruthy();
       expect(screen.queryByText(restaurants[1].name)).toBeTruthy();
+
+      expect(
+        screen.queryByText('An error occurred while loading the restaurants'),
+      ).toBeNull();
     });
   });
 

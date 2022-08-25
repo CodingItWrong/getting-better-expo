@@ -1,9 +1,12 @@
 import {FlatList, Text} from 'react-native';
 
-export default function RestaurantList({restaurants}) {
+export default function RestaurantList({restaurants, loadError}) {
+  if (loadError) {
+    return <Text>An error occurred while loading the restaurants</Text>;
+  }
+
   return (
     <>
-      <Text>An error occurred while loading the restaurants</Text>
       <FlatList
         data={restaurants}
         keyExtractor={item => item.id}
