@@ -90,11 +90,25 @@ export default function RestaurantList({
 }
 
 function RestaurantRow({restaurant, onDelete}) {
+  const [deleting, setDeleting] = useState(false);
+
+  async function handleDelete() {
+    setDeleting(true);
+    await onDelete();
+    setDeleting(false);
+  }
+
   return (
     <View style={styles.restaurantRow}>
       <Text style={styles.restaurantName}>{restaurant.name}</Text>
-      <Pressable style={styles.button} onPress={onDelete}>
-        <Text>Delete</Text>
+      <Pressable
+        disabled={deleting}
+        style={styles.button}
+        onPress={handleDelete}
+      >
+        <Text style={deleting && styles.buttonTextDisabled}>
+          {deleting ? 'Deleting…' : 'Delete'}
+        </Text>
       </Pressable>
     </View>
   );
