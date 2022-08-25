@@ -57,6 +57,15 @@ export default function RestaurantList({
         renderItem={({item}) => (
           <View style={styles.restaurantRow}>
             <Text style={styles.restaurantName}>{item.name}</Text>
+            <Pressable
+              onPress={() =>
+                api
+                  .delete(`/restaurants/${item.id}`)
+                  .then(() => reloadRestaurants())
+              }
+            >
+              <Text>Delete</Text>
+            </Pressable>
           </View>
         )}
       />
