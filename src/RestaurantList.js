@@ -1,13 +1,8 @@
 import {useState} from 'react';
-import {
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import {FlatList, Pressable, StyleSheet, Text, View} from 'react-native';
+import NewRestaurantForm from './NewRestaurantForm';
 import api from './api';
+import sharedStyles from './sharedStyles';
 
 export default function RestaurantList({
   restaurants,
@@ -68,39 +63,6 @@ export default function RestaurantList({
   );
 }
 
-function NewRestaurantForm({onAdd}) {
-  const [name, setName] = useState('');
-  const [adding, setAdding] = useState(false);
-
-  async function handleAdd() {
-    setAdding(true);
-    await onAdd(name);
-    setAdding(false);
-    setName('');
-  }
-
-  return (
-    <View style={styles.addRow}>
-      <TextInput
-        placeholder="New restaurant name"
-        value={name}
-        onChangeText={setName}
-        style={styles.newRestaurantNameField}
-      />
-      <Pressable
-        testID="add-button"
-        disabled={adding}
-        style={[styles.button, styles.addButton]}
-        onPress={handleAdd}
-      >
-        <Text style={adding && styles.buttonTextDisabled}>
-          {adding ? 'Adding…' : 'Add'}
-        </Text>
-      </Pressable>
-    </View>
-  );
-}
-
 function RestaurantRow({restaurant, onDelete}) {
   const [deleting, setDeleting] = useState(false);
 
@@ -119,10 +81,10 @@ function RestaurantRow({restaurant, onDelete}) {
       <Pressable
         testID="delete-button"
         disabled={deleting}
-        style={styles.button}
+        style={sharedStyles.button}
         onPress={handleDelete}
       >
-        <Text style={deleting && styles.buttonTextDisabled}>
+        <Text style={deleting && sharedStyles.buttonTextDisabled}>
           {deleting ? 'Deleting…' : 'Delete'}
         </Text>
       </Pressable>
@@ -131,34 +93,8 @@ function RestaurantRow({restaurant, onDelete}) {
 }
 
 const styles = StyleSheet.create({
-  button: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    backgroundColor: '#eee',
-  },
-  buttonTextDisabled: {
-    color: '#999',
-  },
   container: {
     flex: 1,
-  },
-  addRow: {
-    flexDirection: 'row',
-    padding: 8,
-  },
-  newRestaurantNameField: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 4,
-  },
-  addButton: {
-    marginLeft: 8,
   },
   message: {
     fontSize: 18,
