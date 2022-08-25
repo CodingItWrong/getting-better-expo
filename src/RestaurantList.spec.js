@@ -53,7 +53,10 @@ describe('RestaurantList', () => {
     it('saves the restaurant to the server', async () => {
       api.post.mockResolvedValue();
 
-      const reloadRestaurants = jest.fn().mockName('reloadRestaurants');
+      const reloadRestaurants = jest
+        .fn()
+        .mockName('reloadRestaurants')
+        .mockResolvedValue();
 
       render(
         <RestaurantList
@@ -71,6 +74,11 @@ describe('RestaurantList', () => {
       expect(api.post).toHaveBeenCalledWith('/restaurants', {name});
 
       await waitFor(() => expect(reloadRestaurants).toHaveBeenCalledWith());
+
+      expect(screen.getByPlaceholderText('New restaurant name')).toHaveProp(
+        'value',
+        '',
+      );
     });
   });
 });

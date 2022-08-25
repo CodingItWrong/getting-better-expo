@@ -38,7 +38,10 @@ export default function RestaurantList({
       />
       <Pressable
         onPress={() =>
-          api.post('/restaurants', {name}).then(() => reloadRestaurants())
+          api
+            .post('/restaurants', {name})
+            .then(() => reloadRestaurants())
+            .then(() => setName(''))
         }
       >
         <Text>Add</Text>
