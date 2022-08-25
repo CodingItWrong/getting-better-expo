@@ -19,7 +19,7 @@ export default function RestaurantList({
   const [adding, setAdding] = useState(false);
   const [updateErrorMessage, setUpdateErrorMessage] = useState(null);
 
-  const handleAdd = () => {
+  function handleAdd() {
     setAdding(true);
     api
       .post('/restaurants', {name})
@@ -31,15 +31,16 @@ export default function RestaurantList({
       .catch(() =>
         setUpdateErrorMessage('An error occurred adding the restaurant'),
       );
-  };
+  }
 
-  const handleDelete = item =>
+  function handleDelete(item) {
     api
       .delete(`/restaurants/${item.id}`)
       .then(() => reloadRestaurants())
       .catch(() =>
         setUpdateErrorMessage('An error occurred deleting the restaurant'),
       );
+  }
 
   if (loading) {
     return <Text style={styles.message}>Loading…</Text>;
