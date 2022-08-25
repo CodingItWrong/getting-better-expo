@@ -34,6 +34,8 @@ describe('RestaurantList', () => {
       render(<RestaurantList loadError />);
 
       expect(screen.queryByText(loadErrorMessage)).toBeTruthy();
+
+      expect(screen.queryByText(loadingMessage)).toBeNull();
     });
   });
 });
