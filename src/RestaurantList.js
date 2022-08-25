@@ -93,9 +93,12 @@ function RestaurantRow({restaurant, onDelete}) {
   const [deleting, setDeleting] = useState(false);
 
   async function handleDelete() {
-    setDeleting(true);
-    await onDelete();
-    setDeleting(false);
+    try {
+      setDeleting(true);
+      await onDelete();
+    } catch {
+      setDeleting(false);
+    }
   }
 
   return (
