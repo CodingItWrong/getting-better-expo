@@ -7,6 +7,7 @@ export default function RestaurantList({restaurants, loadError}) {
 
   return (
     <>
+      <Text>Loading…</Text>
       <FlatList
         data={restaurants}
         keyExtractor={item => item.id}

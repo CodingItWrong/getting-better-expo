@@ -7,6 +7,15 @@ describe('RestaurantList', () => {
     {id: 2, name: 'Salad Place'},
   ];
   const loadErrorMessage = 'An error occurred while loading the restaurants';
+  const loadingMessage = 'Loading…';
+
+  describe('while loading', () => {
+    it('displays a loading indicator', () => {
+      render(<RestaurantList loading />);
+
+      expect(screen.queryByText(loadingMessage)).toBeTruthy();
+    });
+  });
 
   describe('when restaurants are available', () => {
     it('displays the restaurant names', () => {
