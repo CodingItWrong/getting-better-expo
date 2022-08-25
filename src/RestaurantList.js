@@ -16,6 +16,7 @@ export default function RestaurantList({
   reloadRestaurants,
 }) {
   const [name, setName] = useState('');
+  const [updateErrorMessage, setUpdateErrorMessage] = useState(null);
 
   if (loading) {
     return <Text style={styles.message}>Loading…</Text>;
@@ -42,10 +43,14 @@ export default function RestaurantList({
             .post('/restaurants', {name})
             .then(() => reloadRestaurants())
             .then(() => setName(''))
+            .catch(() =>
+              setUpdateErrorMessage('An error occurred adding the restaurant'),
+            )
         }
       >
         <Text>Add</Text>
       </Pressable>
+      {updateErrorMessage && <Text>{updateErrorMessage}</Text>}
       <FlatList
         data={restaurants}
         keyExtractor={item => item.id}
