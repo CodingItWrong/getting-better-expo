@@ -1,8 +1,8 @@
 import {useState} from 'react';
-import {FlatList, Pressable, StyleSheet, Text, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import NewRestaurantForm from './NewRestaurantForm';
+import RestaurantRow from './RestaurantRow';
 import api from './api';
-import sharedStyles from './sharedStyles';
 
 export default function RestaurantList({
   restaurants,
@@ -63,35 +63,6 @@ export default function RestaurantList({
   );
 }
 
-function RestaurantRow({restaurant, onDelete}) {
-  const [deleting, setDeleting] = useState(false);
-
-  async function handleDelete() {
-    try {
-      setDeleting(true);
-      await onDelete();
-    } catch {
-      setDeleting(false);
-    }
-  }
-
-  return (
-    <View style={styles.restaurantRow}>
-      <Text style={styles.restaurantName}>{restaurant.name}</Text>
-      <Pressable
-        testID="delete-button"
-        disabled={deleting}
-        style={sharedStyles.button}
-        onPress={handleDelete}
-      >
-        <Text style={deleting && sharedStyles.buttonTextDisabled}>
-          {deleting ? 'Deleting…' : 'Delete'}
-        </Text>
-      </Pressable>
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -104,16 +75,5 @@ const styles = StyleSheet.create({
     color: 'red',
     fontSize: 18,
     padding: 8,
-  },
-  restaurantRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderColor: '#ccc',
-    padding: 8,
-  },
-  restaurantName: {
-    flex: 1,
-    fontSize: 18,
   },
 });
