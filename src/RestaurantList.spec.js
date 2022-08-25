@@ -1,4 +1,9 @@
-import {fireEvent, render, screen} from '@testing-library/react-native';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react-native';
 import RestaurantList from './RestaurantList';
 import api from './api';
 
@@ -45,8 +50,17 @@ describe('RestaurantList', () => {
   describe('when adding a restaurant succeeds', () => {
     const name = 'Burger Place';
 
-    it('saves the restaurant to the server', () => {
-      render(<RestaurantList restaurants={[]} />);
+    it('saves the restaurant to the server', async () => {
+      api.post.mockResolvedValue();
+
+      const reloadRestaurants = jest.fn().mockName('reloadRestaurants');
+
+      render(
+        <RestaurantList
+          restaurants={[]}
+          reloadRestaurants={reloadRestaurants}
+        />,
+      );
 
       fireEvent.changeText(
         screen.getByPlaceholderText('New restaurant name'),
@@ -55,6 +69,8 @@ describe('RestaurantList', () => {
       fireEvent.press(screen.getByText('Add'));
 
       expect(api.post).toHaveBeenCalledWith('/restaurants', {name});
+
+      await waitFor(() => expect(reloadRestaurants).toHaveBeenCalledWith());
     });
   });
 });

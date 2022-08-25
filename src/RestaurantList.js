@@ -9,7 +9,12 @@ import {
 } from 'react-native';
 import api from './api';
 
-export default function RestaurantList({restaurants, loading, loadError}) {
+export default function RestaurantList({
+  restaurants,
+  loading,
+  loadError,
+  reloadRestaurants,
+}) {
   const [name, setName] = useState('');
 
   if (loading) {
@@ -31,7 +36,11 @@ export default function RestaurantList({restaurants, loading, loadError}) {
         value={name}
         onChangeText={setName}
       />
-      <Pressable onPress={() => api.post('/restaurants', {name})}>
+      <Pressable
+        onPress={() =>
+          api.post('/restaurants', {name}).then(() => reloadRestaurants())
+        }
+      >
         <Text>Add</Text>
       </Pressable>
       <FlatList
