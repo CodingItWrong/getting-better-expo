@@ -125,6 +125,12 @@ describe('RestaurantList', () => {
 
       fireEvent.press(screen.getAllByText('Delete')[0]);
 
+      expect(screen.queryByText('Deleting…')).toBeTruthy();
+      expect(screen.getAllByTestId('delete-button')[0]).toHaveProp(
+        'accessibilityState',
+        {disabled: true},
+      );
+
       expect(api.delete).toHaveBeenCalledWith(
         `/restaurants/${restaurants[0].id}`,
       );

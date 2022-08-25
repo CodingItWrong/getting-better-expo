@@ -105,6 +105,7 @@ function RestaurantRow({restaurant, onDelete}) {
     <View style={styles.restaurantRow}>
       <Text style={styles.restaurantName}>{restaurant.name}</Text>
       <Pressable
+        testID="delete-button"
         disabled={deleting}
         style={styles.button}
         onPress={handleDelete}
