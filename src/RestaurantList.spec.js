@@ -15,4 +15,14 @@ describe('RestaurantList', () => {
       expect(screen.queryByText(restaurants[1].name)).toBeTruthy();
     });
   });
+
+  describe('when there is a load error', () => {
+    it('displays an error message', () => {
+      render(<RestaurantList loadError />);
+
+      expect(
+        screen.queryByText('An error occurred while loading the restaurants'),
+      ).toBeTruthy();
+    });
+  });
 });
