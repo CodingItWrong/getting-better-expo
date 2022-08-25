@@ -16,6 +16,7 @@ export default function RestaurantList({
   reloadRestaurants,
 }) {
   const [name, setName] = useState('');
+  const [adding, setAdding] = useState(false);
   const [updateErrorMessage, setUpdateErrorMessage] = useState(null);
 
   if (loading) {
@@ -38,17 +39,23 @@ export default function RestaurantList({
         onChangeText={setName}
       />
       <Pressable
-        onPress={() =>
+        testID="add-button"
+        disabled={adding}
+        onPress={() => {
+          setAdding(true);
           api
             .post('/restaurants', {name})
             .then(() => reloadRestaurants())
-            .then(() => setName(''))
+            .then(() => {
+              setName('');
+              setAdding(false);
+            })
             .catch(() =>
               setUpdateErrorMessage('An error occurred adding the restaurant'),
-            )
-        }
+            );
+        }}
       >
-        <Text>Add</Text>
+        <Text>{adding ? 'Adding…' : 'Add'}</Text>
       </Pressable>
       {updateErrorMessage && <Text>{updateErrorMessage}</Text>}
       <FlatList
@@ -63,7 +70,9 @@ export default function RestaurantList({
                   .delete(`/restaurants/${item.id}`)
                   .then(() => reloadRestaurants())
                   .catch(() =>
-                    setUpdateError('An error occurred deleting the restaurant'),
+                    setUpdateErrorMessage(
+                      'An error occurred deleting the restaurant',
+                    ),
                   )
               }
             >

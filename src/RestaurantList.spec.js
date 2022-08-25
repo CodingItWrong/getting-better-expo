@@ -49,6 +49,7 @@ describe('RestaurantList', () => {
 
   describe('when adding a restaurant succeeds', () => {
     const name = 'Burger Place';
+    const addingLabel = 'Adding…';
 
     it('saves the restaurant to the server', async () => {
       api.post.mockResolvedValue();
@@ -71,6 +72,12 @@ describe('RestaurantList', () => {
       );
       fireEvent.press(screen.getByText('Add'));
 
+      expect(screen.queryByText(addingLabel)).toBeTruthy();
+      expect(screen.getByTestId('add-button')).toHaveProp(
+        'accessibilityState',
+        {disabled: true},
+      );
+
       expect(api.post).toHaveBeenCalledWith('/restaurants', {name});
 
       await waitFor(() => expect(reloadRestaurants).toHaveBeenCalledWith());
@@ -78,6 +85,11 @@ describe('RestaurantList', () => {
       expect(screen.getByPlaceholderText('New restaurant name')).toHaveProp(
         'value',
         '',
+      );
+      expect(screen.queryByText(addingLabel)).toBeNull();
+      expect(screen.getByTestId('add-button')).toHaveProp(
+        'accessibilityState',
+        {disabled: false},
       );
     });
   });
