@@ -31,9 +31,9 @@ export default function RestaurantList({
     }
   }
 
-  async function handleDelete(item) {
+  async function handleDelete(restaurant) {
     try {
-      await api.delete(`/restaurants/${item.id}`);
+      await api.delete(`/restaurants/${restaurant.id}`);
       await reloadRestaurants();
     } catch {
       setUpdateErrorMessage('An error occurred deleting the restaurant');
@@ -77,11 +77,14 @@ export default function RestaurantList({
       )}
       <FlatList
         data={restaurants}
-        keyExtractor={item => item.id}
-        renderItem={({item}) => (
+        keyExtractor={restaurant => restaurant.id}
+        renderItem={({item: restaurant}) => (
           <View style={styles.restaurantRow}>
-            <Text style={styles.restaurantName}>{item.name}</Text>
-            <Pressable style={styles.button} onPress={() => handleDelete(item)}>
+            <Text style={styles.restaurantName}>{restaurant.name}</Text>
+            <Pressable
+              style={styles.button}
+              onPress={() => handleDelete(restaurant)}
+            >
               <Text>Delete</Text>
             </Pressable>
           </View>
