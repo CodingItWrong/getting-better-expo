@@ -1,5 +1,8 @@
 import {fireEvent, render, screen} from '@testing-library/react-native';
 import RestaurantList from './RestaurantList';
+import api from './api';
+
+jest.mock('./api');
 
 describe('RestaurantList', () => {
   const restaurants = [
@@ -42,7 +45,7 @@ describe('RestaurantList', () => {
   describe('when adding a restaurant succeeds', () => {
     const name = 'Burger Place';
 
-    it('TBD', () => {
+    it('saves the restaurant to the server', () => {
       render(<RestaurantList restaurants={[]} />);
 
       fireEvent.changeText(
@@ -50,6 +53,8 @@ describe('RestaurantList', () => {
         name,
       );
       fireEvent.press(screen.getByText('Add'));
+
+      expect(api.post).toHaveBeenCalledWith('/restaurants', {name});
     });
   });
 });

@@ -1,3 +1,4 @@
+import {useState} from 'react';
 import {
   FlatList,
   Pressable,
@@ -6,8 +7,11 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import api from './api';
 
 export default function RestaurantList({restaurants, loading, loadError}) {
+  const [name, setName] = useState('');
+
   if (loading) {
     return <Text style={styles.message}>Loading…</Text>;
   }
@@ -22,8 +26,12 @@ export default function RestaurantList({restaurants, loading, loadError}) {
 
   return (
     <>
-      <TextInput placeholder="New restaurant name" />
-      <Pressable>
+      <TextInput
+        placeholder="New restaurant name"
+        value={name}
+        onChangeText={setName}
+      />
+      <Pressable onPress={() => api.post('/restaurants', {name})}>
         <Text>Add</Text>
       </Pressable>
       <FlatList
