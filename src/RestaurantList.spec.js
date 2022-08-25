@@ -1,4 +1,4 @@
-import {render, screen} from '@testing-library/react-native';
+import {fireEvent, render, screen} from '@testing-library/react-native';
 import RestaurantList from './RestaurantList';
 
 describe('RestaurantList', () => {
@@ -36,6 +36,20 @@ describe('RestaurantList', () => {
       expect(screen.queryByText(loadErrorMessage)).toBeTruthy();
 
       expect(screen.queryByText(loadingMessage)).toBeNull();
+    });
+  });
+
+  describe('when adding a restaurant succeeds', () => {
+    const name = 'Burger Place';
+
+    it('TBD', () => {
+      render(<RestaurantList restaurants={[]} />);
+
+      fireEvent.changeText(
+        screen.getByPlaceholderText('New restaurant name'),
+        name,
+      );
+      fireEvent.press(screen.getByText('Add'));
     });
   });
 });

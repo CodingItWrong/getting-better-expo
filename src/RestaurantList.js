@@ -1,4 +1,11 @@
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 
 export default function RestaurantList({restaurants, loading, loadError}) {
   if (loading) {
@@ -15,6 +22,10 @@ export default function RestaurantList({restaurants, loading, loadError}) {
 
   return (
     <>
+      <TextInput placeholder="New restaurant name" />
+      <Pressable>
+        <Text>Add</Text>
+      </Pressable>
       <FlatList
         data={restaurants}
         keyExtractor={item => item.id}
