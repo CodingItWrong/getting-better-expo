@@ -1,4 +1,4 @@
-import {render, screen} from '@testing-library/react-native';
+import {fireEvent, render, screen} from '@testing-library/react-native';
 import RestaurantRow from './RestaurantRow';
 
 describe('RestaurantRow', () => {
@@ -8,5 +8,17 @@ describe('RestaurantRow', () => {
     render(<RestaurantRow restaurant={restaurant} />);
 
     expect(screen.queryByText(restaurant.name)).toBeTruthy();
+  });
+
+  it('allows deleting the restaurant', () => {
+    const onDelete = jest.fn().mockName('onDelete');
+
+    render(<RestaurantRow restaurant={restaurant} onDelete={onDelete} />);
+
+    fireEvent.press(screen.getByText('Delete'));
+
+    expect(screen.queryByText('Deleting…')).toBeTruthy();
+
+    expect(onDelete).toHaveBeenCalledWith();
   });
 });
